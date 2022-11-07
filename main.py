@@ -138,12 +138,12 @@ class Game:
             if event.type == pg.MOUSEBUTTONDOWN:
                 pos = pg.mouse.get_pos()
                 piece = [s for s in self.pawn_sprites if s.rect.collidepoint(pos)]
-                self.moves = piece[0].valid_moves()
+                if self.moves != piece[0].valid_moves():
+                    self.moves = piece[0].valid_moves()
+                else:
+                    self.moves = []
                 print(self.moves)
-                # p = Rook(self, TILE * 4 + 50, TILE * 4 + 50, 0)
-                # self.rook_sprites.add(p)
 
-                # self.display_moves(piece[0].valid_moves())
 
 
     def display_moves(self, moves):
@@ -151,8 +151,6 @@ class Game:
             pg.draw.rect(self.display, GREEN, pg.Rect(TILE * move[0] + 25, TILE * move[1] + 25, 50, 50))
 
     def update(self):
-        # for move in moves:
-        #     pg.draw.rect(self.display, GREEN, pg.Rect(TILE * 0 + 25, TILE * 5 + 25, 50, 50))
         self.all_sprites.update()
 
 
@@ -168,7 +166,8 @@ class Game:
                     pg.draw.rect(self.display, WHITE, ((i * TILE * 2) + 100, j * TILE, 100, 100))
 
         for move in self.moves:
-            pg.draw.rect(self.display, GREEN, pg.Rect(TILE * move[0] + 25, TILE * move[1] + 25, 50,50))
+            pg.draw.rect(self.display, GREEN, pg.Rect(TILE * move[0] + 35, TILE * move[1] + 35, 30,30))
+
         self.all_sprites.draw(self.display)
         pg.display.update()
 
