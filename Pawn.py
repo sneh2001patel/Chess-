@@ -29,11 +29,17 @@ class Pawn(pg.sprite.Sprite):
         moves = []
         if not self.has_moved:
             if self.color == 1:
-                moves.append([self.pos[0], self.pos[1] + 1])
-                moves.append([self.pos[0], self.pos[1] + 2])
+                for i in range(2):
+                    if self.game.board[self.pos[1] + (i + 1)][self.pos[0]] == "":
+                        moves.append([self.pos[0], self.pos[1] + (i + 1)])
+                    else:
+                        break
             if self.color == 0:
-                moves.append([self.pos[0], self.pos[1] - 1])
-                moves.append([self.pos[0], self.pos[1] - 2])
+                for i in range(2):
+                    if self.game.board[self.pos[1] - (i+1)][self.pos[0]] == "":
+                        moves.append([self.pos[0], self.pos[1] - (i+1)])
+                    else:
+                        break
         else:
             if self.color == 1:
                 moves.append([self.pos[0], self.pos[1] + 1])
