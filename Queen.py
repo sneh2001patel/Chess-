@@ -101,7 +101,6 @@ class Queen(pg.sprite.Sprite):
         m = 1
         while True:
             if (self.pos[0] + m <= 7) and (self.game.board[self.pos[1]][self.pos[0] + m] == ""):
-                # print("Ads")
                 moves.append([self.pos[0] + m, self.pos[1]])
                 m += 1
             else:
