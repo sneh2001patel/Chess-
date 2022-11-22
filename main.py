@@ -12,6 +12,7 @@ import os
 import random
 import time
 
+
 # hello my name is jenny
 class Game:
 
@@ -26,18 +27,15 @@ class Game:
 
     def load_data(self):
         self.board = []
-        a = []
+        line = []
         with open('board.txt', 'rt') as f:
-            contents = f.read()
-            for letter in contents:
-                if letter == "\n":
-                    self.board.append(a)
-                    a = []
-                else:
-                    if letter == ".":
-                        a.append("")
-                    else:
-                        a.append(letter)
+            contents = f.readlines()
+            for line in contents:
+                a = line.split()
+                a = list(map(lambda x: x.replace('.', ''), a))
+                self.board.append(a)
+
+
         self.black_king = pg.image.load(BKING).convert_alpha()
         self.white_king = pg.image.load(WKING).convert_alpha()
 
@@ -77,49 +75,46 @@ class Game:
         self.queen_sprites = pg.sprite.Group()
         self.king_sprites = pg.sprite.Group()
 
+        print(self.board)
+
         for i in range(len(self.board)):
-            for j in range(len(self.board)):
-                if self.board[i][j] == "P":
+            for j in range(len(self.board[i])):
+                if "P" in self.board[i][j]:
                     color = 0
-                    if i < 2:
+                    if "b" in self.board[i][j]:
                         color = 1
-                    pawn = Pawn(self, TILE * j + 50, TILE * i + 50, color, [j,i])
+                    pawn = Pawn(self, TILE * j + 50, TILE * i + 50, color, [j, i])
                     self.pawn_sprites.add(pawn)
-
-                if self.board[i][j] == "R":
+                if "R" in self.board[i][j]:
                     color = 0
-                    if i < 2:
+                    if "b" in self.board[i][j]:
                         color = 1
-                    rook = Rook(self, TILE * j + 50, TILE * i + 50, color)
+                    rook = Rook(self, TILE * j + 50, TILE * i + 50, color, [j, i])
                     self.rook_sprites.add(rook)
-
-                if self.board[i][j] == "B":
+                if "B" in self.board[i][j]:
                     color = 0
-                    if i < 2:
+                    if "b" in self.board[i][j]:
                         color = 1
-                    bishop = Bishop(self, TILE * j + 50, TILE * i + 50, color)
-                    self.rook_sprites.add(bishop)
-
-                if self.board[i][j] == "H":
+                    bishop = Bishop(self, TILE * j + 50, TILE * i + 50, color, [j, i])
+                    self.bishop_sprites.add(bishop)
+                if "H" in self.board[i][j]:
                     color = 0
-                    if i < 2:
+                    if "b" in self.board[i][j]:
                         color = 1
-                    knight = Knight(self, TILE * j + 50, TILE * i + 50, color)
-                    self.rook_sprites.add(knight)
-
-                if self.board[i][j] == "Q":
+                    knight = Knight(self, TILE * j + 50, TILE * i + 50, color, [j, i])
+                    self.knight_sprites.add(knight)
+                if "Q" in self.board[i][j]:
                     color = 0
-                    if i < 2:
+                    if "b" in self.board[i][j]:
                         color = 1
-                    queen = Queen(self, TILE * j + 50, TILE * i + 50, color)
-                    self.rook_sprites.add(queen)
-
-                if self.board[i][j] == "K":
+                    queen = Queen(self, TILE * j + 50, TILE * i + 50, color, [j, i])
+                    self.queen_sprites.add(queen)
+                if "K" in self.board[i][j]:
                     color = 0
-                    if i < 2:
+                    if "b" in self.board[i][j]:
                         color = 1
-                    king = King(self, TILE * j + 50, TILE * i + 50, color)
-                    self.rook_sprites.add(king)
+                    king = King(self, TILE * j + 50, TILE * i + 50, color, [j, i])
+                    self.king_sprites.add(king)
 
         self.all_sprites.add(self.pawn_sprites)
         self.all_sprites.add(self.rook_sprites)
@@ -137,14 +132,16 @@ class Game:
                     self.running = False
             if event.type == pg.MOUSEBUTTONDOWN:
                 pos = pg.mouse.get_pos()
-                piece = [s for s in self.pawn_sprites if s.rect.collidepoint(pos)]
-                if self.moves != piece[0].valid_moves():
-                    self.moves = piece[0].valid_moves()
-                else:
+                piece = [s for s in self.all_sprites if s.rect.collidepoint(pos)]
+                try:
+                    if self.moves != piece[0].valid_moves():
+                        self.moves = piece[0].valid_moves()
+                    else:
+                        self.moves = []
+                    print(self.moves)
+                except:
                     self.moves = []
-                print(self.moves)
-
-
+                    pass
 
     def display_moves(self, moves):
         for move in moves:
@@ -152,7 +149,6 @@ class Game:
 
     def update(self):
         self.all_sprites.update()
-
 
     def draw(self):
         self.display.fill(BLACK)  # draw background
@@ -165,10 +161,10 @@ class Game:
                 else:
                     pg.draw.rect(self.display, WHITE, ((i * TILE * 2) + 100, j * TILE, 100, 100))
 
-        for move in self.moves:
-            pg.draw.rect(self.display, GREEN, pg.Rect(TILE * move[0] + 35, TILE * move[1] + 35, 30,30))
-
         self.all_sprites.draw(self.display)
+        for move in self.moves:
+            pg.draw.rect(self.display, GREEN, pg.Rect(TILE * move[0] + 35, TILE * move[1] + 35, 30, 30))
+
         pg.display.update()
 
 
