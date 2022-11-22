@@ -28,22 +28,24 @@ class Pawn(pg.sprite.Sprite):
     def valid_moves(self):
         moves = []
         if not self.has_moved:
-            if self.color == 1:
-                for i in range(2):
-                    if self.game.board[self.pos[1] + (i + 1)][self.pos[0]] == "":
-                        moves.append([self.pos[0], self.pos[1] + (i + 1)])
+            if self.color == 0:
+                for i in range(1, 3):
+                    if (self.pos[1] - i >= 0) and (self.game.board[self.pos[1] - i][self.pos[0]] == ""):
+                        moves.append([self.pos[0], self.pos[1] - i])
                     else:
                         break
-            if self.color == 0:
-                for i in range(2):
-                    if self.game.board[self.pos[1] - (i+1)][self.pos[0]] == "":
-                        moves.append([self.pos[0], self.pos[1] - (i+1)])
+            if self.color == 1:
+                for i in range(1, 3):
+                    if (self.pos[1] + i <= 7) and (self.game.board[self.pos[1] + i][self.pos[0]] == ""):
+                        moves.append([self.pos[0], self.pos[1] + i])
                     else:
                         break
-        else:
-            if self.color == 1:
-                moves.append([self.pos[0], self.pos[1] + 1])
-            if self.color == 0:
-                moves.append([self.pos[0], self.pos[1] - 1])
-        return moves
 
+        else:
+            if self.color == 0:
+                if (self.pos[1] - 1 >= 0) and (self.game.board[self.pos[1] - 1][self.pos[0]] == ""):
+                    moves.append([self.pos[0], self.pos[1] - 1])
+            if self.color == 1:
+                if (self.pos[1] + 1 <= 7) and (self.game.board[self.pos[1] + 1][self.pos[0]] == ""):
+                    moves.append([self.pos[0], self.pos[1] + 1])
+        return moves

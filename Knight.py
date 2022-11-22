@@ -22,3 +22,61 @@ class Knight(pg.sprite.Sprite):
 
     def update(self):
         self.rect.center = (self.x, self.y)
+
+    def valid_moves(self):
+        moves = []
+        # print("Current: ", self.game.board[self.pos[1]][self.pos[0]])
+        # print("Up: ", self.game.board[self.pos[1] - 1][self.pos[0]])
+        # print("Down: ", self.game.board[self.pos[1] + 1][self.pos[0]])
+        # print("Right: ", self.game.board[self.pos[1]][self.pos[0] + 1])
+        # print("Left: ", self.game.board[self.pos[1]][self.pos[0] - 1])
+
+        if (self.pos[1] - 1 >= 0) and (self.pos[0] + 2 <= 7) and (self.game.board[self.pos[1] - 1][self.pos[0] + 2] == ""):
+            moves.append([self.pos[0] + 2, self.pos[1] - 1])
+
+        if (self.pos[1] - 2 >= 0) and (self.pos[0] + 1 <= 7) and (self.game.board[self.pos[1] - 2][self.pos[0] + 1] == ""):
+            moves.append([self.pos[0] + 1, self.pos[1] - 2])
+
+        if (self.pos[1] - 2 >= 0) and (self.pos[0] - 1 >= 0) and (self.game.board[self.pos[1] - 2][self.pos[0] - 1] == ""):
+            moves.append([self.pos[0] - 1, self.pos[1] - 2])
+
+        if (self.pos[1] + 2 <= 7) and (self.pos[0] - 1 >= 0) and (self.game.board[self.pos[1] + 2][self.pos[0] - 1] == ""):
+            moves.append([self.pos[0] - 1, self.pos[1] + 2])
+
+        if (self.pos[1] + 1 <= 7) and (self.pos[0] - 2 >= 0) and (self.game.board[self.pos[1] + 1][self.pos[0] - 2] == ""):
+            moves.append([self.pos[0] - 2, self.pos[1] + 1])
+
+        if (self.pos[1] - 1 >= 0) and (self.pos[0] - 2 >= 0) and (self.game.board[self.pos[1] - 1][self.pos[0] - 2] == ""):
+            moves.append([self.pos[0] - 2, self.pos[1] - 1])
+
+        if (self.pos[1] + 1 <= 7) and (self.pos[0] + 2 <= 7) and (self.game.board[self.pos[1] + 1][self.pos[0] + 2] == ""):
+            moves.append([self.pos[0] + 2, self.pos[1] + 1])
+
+        if (self.pos[1] + 2 <= 7) and (self.pos[0] + 1 <= 7) and (self.game.board[self.pos[1] + 2][self.pos[0] + 1] == ""):
+            moves.append([self.pos[0] + 1, self.pos[1] + 2])
+
+        # if (self.pos[1] - 1 >= 0) and (self.pos[0] - 1 >= 0) and (
+        #         self.game.board[self.pos[1] - 1][self.pos[0] - 1] == ""):
+        #     moves.append([self.pos[0] - 1, self.pos[1] - 1])
+        #
+        # if (self.pos[1] + 1 <= 7) and (self.pos[0] + 1 <= 7) and (
+        #         self.game.board[self.pos[1] + 1][self.pos[0] + 1] == ""):
+        #     moves.append([self.pos[0] + 1, self.pos[1] + 1])
+        #
+        # if (self.pos[1] + 1 <= 7) and (self.pos[0] - 1 >= 0) and (
+        #         self.game.board[self.pos[1] + 1][self.pos[0] - 1] == ""):
+        #     moves.append([self.pos[0] - 1, self.pos[1] + 1])
+        #
+        # if (self.pos[1] - 1 >= 0) and (self.game.board[self.pos[1] - 1][self.pos[0]] == ""):
+        #     moves.append([self.pos[0], self.pos[1] - 1])
+        #
+        # if (self.pos[1] + 1 <= 7) and (self.game.board[self.pos[1] + 1][self.pos[0]] == ""):
+        #     moves.append([self.pos[0], self.pos[1] + 1])
+        #
+        # if (self.pos[0] - 1 >= 0) and (self.game.board[self.pos[1]][self.pos[0] - 1] == ""):
+        #     moves.append([self.pos[0] - 1, self.pos[1]])
+        #
+        # if (self.pos[0] + 1 <= 7) and (self.game.board[self.pos[1]][self.pos[0] + 1] == ""):
+        #     moves.append([self.pos[0] + 1, self.pos[1]])
+
+        return moves
