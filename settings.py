@@ -1,5 +1,5 @@
 # Game Properties
-TILE = 100
+TILE = 100 # Change this to resize the window to fit the board 100 is recommended if need smaller try 80
 BOARDLEN = 8
 WIDTH = TILE * BOARDLEN
 HEIGHT = TILE * BOARDLEN

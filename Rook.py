@@ -6,11 +6,12 @@ from settings import *
 
 class Rook(pg.sprite.Sprite):
 
-    def __init__(self, game, x, y, color, pos):
+    def __init__(self, game, x, y, color, pos, symbol):
         pg.sprite.Sprite.__init__(self)
         self.game = game
+        self.symbol = symbol
         self.image = game.black_rook if color == 1 else game.white_rook
-        self.image = pg.transform.scale(self.image, ((100, 100)))
+        self.image = pg.transform.scale(self.image, ((TILE, TILE)))
         # self.image.fill(YELLOW)
         self.rect = self.image.get_rect()
         self.x = x
@@ -21,7 +22,12 @@ class Rook(pg.sprite.Sprite):
         # self.rect.center = (x,y)
 
     def update(self):
-        self.rect.center = (self.x, self.y)
+        pass
+
+    def handle_movement(self, x, y):
+        self.x = x
+        self.y = y
+        self.rect.center = (self.x,self.y)
 
     def valid_moves(self):
         moves = []

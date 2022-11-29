@@ -6,9 +6,10 @@ from settings import *
 
 class Pawn(pg.sprite.Sprite):
 
-    def __init__(self, game, x, y, color, pos):
+    def __init__(self, game, x, y, color, pos, symbol):
         pg.sprite.Sprite.__init__(self)
         self.game = game
+        self.symbol = symbol
         self.has_moved = False
         self.color = color
         self.image = game.black_pawn if color == 1 else game.white_pawn
@@ -21,9 +22,17 @@ class Pawn(pg.sprite.Sprite):
         self.rect.center = (self.x, self.y)
 
     def update(self):
-        self.rect.center = (self.x, self.y)
+        pass
+        # self.rect.center = (self.x, self.y)
+
         # pg.draw.rect(self.game.display, GREEN, pg.Rect(TILE * 0 + 25, TILE * 5 + 25, 50, 50))
         # pg.draw.rect(self.game.display, GREEN, pg.Rect(TILE * 0 + 50, TILE * 5 + 50, 50, 50))
+
+    def handle_movement(self, x, y):
+        self.x = x
+        self.y = y
+        self.rect.center = (self.x, self.y)
+        self.has_moved = True
 
     def valid_moves(self):
         moves = []

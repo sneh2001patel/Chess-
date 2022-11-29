@@ -6,11 +6,12 @@ from settings import *
 
 class Queen(pg.sprite.Sprite):
 
-    def __init__(self, game, x, y, color, pos):
+    def __init__(self, game, x, y, color, pos, symbol):
         pg.sprite.Sprite.__init__(self)
         self.game = game
+        self.symbol = symbol
         self.image = game.black_queen if color == 1 else game.white_queen
-        self.image = pg.transform.scale(self.image, ((100, 100)))
+        self.image = pg.transform.scale(self.image, ((TILE, TILE)))
         # self.image.fill(MAGENTA)
         self.rect = self.image.get_rect()
         self.x = x
@@ -21,15 +22,21 @@ class Queen(pg.sprite.Sprite):
         # self.rect.center = (x,y)
 
     def update(self):
+        pass
+        # self.rect.center = (self.x, self.y)
+
+    def handle_movement(self, x, y):
+        self.x = x
+        self.y = y
         self.rect.center = (self.x, self.y)
 
     def valid_moves(self):
         moves = []
-        print("Current: ", self.game.board[self.pos[1]][self.pos[0]])
-        print("Up-right: ", self.game.board[self.pos[1] - 1][self.pos[0]])
-        print("Down: ", self.game.board[self.pos[1] + 1][self.pos[0]])
-        print("Right: ", self.game.board[self.pos[1]][self.pos[0] + 1])
-        print("Left: ", self.game.board[self.pos[1]][self.pos[0] - 1])
+        # print("Current: ", self.game.board[self.pos[1]][self.pos[0]])
+        # print("Up-right: ", self.game.board[self.pos[1] - 1][self.pos[0]])
+        # print("Down: ", self.game.board[self.pos[1] + 1][self.pos[0]])
+        # print("Right: ", self.game.board[self.pos[1]][self.pos[0] + 1])
+        # print("Left: ", self.game.board[self.pos[1]][self.pos[0] - 1])
 
         # Up-right directions
         i = 1
