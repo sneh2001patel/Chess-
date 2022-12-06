@@ -32,6 +32,7 @@ class Queen(pg.sprite.Sprite):
 
     def valid_moves(self):
         moves = []
+        kills = []
         # print("Current: ", self.game.board[self.pos[1]][self.pos[0]])
         # print("Up-right: ", self.game.board[self.pos[1] - 1][self.pos[0]])
         # print("Down: ", self.game.board[self.pos[1] + 1][self.pos[0]])
@@ -47,7 +48,15 @@ class Queen(pg.sprite.Sprite):
                 i += 1
             else:
                 break
-
+        # i += 1
+        if (self.pos[1] - i >= 0) and (self.pos[0] + i <= 7):
+            if self.color == 0:
+                if "b" in self.game.board[self.pos[1] - i][self.pos[0] + i]:
+                    kills.append([self.pos[0] + i, self.pos[1] - i])
+            if self.color == 1:
+                if ("b" not in self.game.board[self.pos[1] - i][self.pos[0] + i]) and (
+                        self.game.board[self.pos[1] - i][self.pos[0] + i] != ""):
+                    kills.append([self.pos[0] + i, self.pos[1] - i])
         # Up-Left directions
         j = 1
         while True:
@@ -57,6 +66,15 @@ class Queen(pg.sprite.Sprite):
                 j += 1
             else:
                 break
+        # i += 1
+        if (self.pos[1] - j >= 0) and (self.pos[0] - j >= 0):
+            if self.color == 0:
+                if "b" in self.game.board[self.pos[1] - j][self.pos[0] - j]:
+                    kills.append([self.pos[0] - j, self.pos[1] - j])
+            if self.color == 1:
+                if ("b" not in self.game.board[self.pos[1] - j][self.pos[0] - j]) and (
+                        self.game.board[self.pos[1] - j][self.pos[0] - j] != ""):
+                    kills.append([self.pos[0] - j, self.pos[1] - j])
 
         # down-right directions
         k = 1
@@ -67,6 +85,16 @@ class Queen(pg.sprite.Sprite):
                 k += 1
             else:
                 break
+        # i += 1
+
+        if (self.pos[1] + k <= 7) and (self.pos[0] + k <= 7):
+            if self.color == 0:
+                if "b" in self.game.board[self.pos[1] + k][self.pos[0] + k]:
+                    kills.append([self.pos[0] + k, self.pos[1] + k])
+            if self.color == 1:
+                if ("b" not in self.game.board[self.pos[1] + k][self.pos[0] + k]) and (
+                        self.game.board[self.pos[1] + k][self.pos[0] + k] != ""):
+                    kills.append([self.pos[0] + k, self.pos[1] + k])
 
         # down-right directions
         m = 1
@@ -77,7 +105,17 @@ class Queen(pg.sprite.Sprite):
                 m += 1
             else:
                 break
-            # Up directions
+
+        if (self.pos[1] + m <= 7) and (self.pos[0] - m >= 0):
+            if self.color == 0:
+                if "b" in self.game.board[self.pos[1] + m][self.pos[0] - m]:
+                    kills.append([self.pos[0] - m, self.pos[1] + m])
+            if self.color == 1:
+                if ("b" not in self.game.board[self.pos[1] + m][self.pos[0] - m]) and (
+                        self.game.board[self.pos[1] + m][self.pos[0] - m] != ""):
+                    kills.append([self.pos[0] - m, self.pos[1] + m])
+
+                # Up directions
         i = 1
         while True:
             if (self.pos[1] - i >= 0) and (self.game.board[self.pos[1] - i][self.pos[0]] == ""):
@@ -85,6 +123,15 @@ class Queen(pg.sprite.Sprite):
                 i += 1
             else:
                 break
+
+        if self.pos[1] - i >= 0:
+            if self.color == 0:
+                if "b" in self.game.board[self.pos[1] - i][self.pos[0]]:
+                    kills.append([self.pos[0], self.pos[1] - i])
+            if self.color == 1:
+                if ("b" not in self.game.board[self.pos[1] - i][self.pos[0]]) and (
+                        self.game.board[self.pos[1] - i][self.pos[0]] != ""):
+                    kills.append([self.pos[0], self.pos[1] - i])
 
         # Down Direction
         j = 1
@@ -95,6 +142,14 @@ class Queen(pg.sprite.Sprite):
             else:
                 break
 
+        if self.pos[1] + j <= 7:
+            if self.color == 0:
+                if "b" in self.game.board[self.pos[1] + j][self.pos[0]]:
+                    kills.append([self.pos[0], self.pos[1] + j])
+            if self.color == 1:
+                if ("b" not in self.game.board[self.pos[1] + j][self.pos[0]]) and (
+                        self.game.board[self.pos[1] + j][self.pos[0]] != ""):
+                    kills.append([self.pos[0], self.pos[1] + j])
         # Left Direction
         k = 1
         while True:
@@ -104,7 +159,16 @@ class Queen(pg.sprite.Sprite):
             else:
                 break
 
-        # # Right Direction
+        if self.pos[0] - k >= 0:
+            if self.color == 0:
+                if "b" in self.game.board[self.pos[1]][self.pos[0] - k]:
+                    kills.append([self.pos[0] - k, self.pos[1]])
+            if self.color == 1:
+                if ("b" not in self.game.board[self.pos[1]][self.pos[0] - k]) and (
+                        self.game.board[self.pos[1]][self.pos[0] - k] != ""):
+                    kills.append([self.pos[0] - k, self.pos[1]])
+
+        #  Right Direction
         m = 1
         while True:
             if (self.pos[0] + m <= 7) and (self.game.board[self.pos[1]][self.pos[0] + m] == ""):
@@ -112,5 +176,13 @@ class Queen(pg.sprite.Sprite):
                 m += 1
             else:
                 break
+        if self.pos[0] + m <= 7:
+            if self.color == 0:
+                if "b" in self.game.board[self.pos[1]][self.pos[0] + m]:
+                    kills.append([self.pos[0] + m, self.pos[1]])
+            if self.color == 1:
+                if ("b" not in self.game.board[self.pos[1]][self.pos[0] + m]) and (
+                        self.game.board[self.pos[1]][self.pos[0] + m] != ""):
+                    kills.append([self.pos[0] + m, self.pos[1]])
 
-        return moves
+        return {"moves": moves, "kills": kills}

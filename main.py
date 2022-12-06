@@ -22,8 +22,11 @@ class Game:
         pg.display.set_caption(TITLE)
         self.clock = pg.time.Clock()
         self.running = True
+        self.turn = 0
         self.load_data()
         self.moves = []
+        self.pos_kills = []
+        self.rect_kills = []
         self.rect_moves = []
         self.current_piece = None
 
@@ -135,6 +138,12 @@ class Game:
 
         self.run()
 
+    def opponent(self, turn):
+        if turn == 0:
+            return 1
+        else:
+            return 0
+
     def events(self):
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -144,19 +153,32 @@ class Game:
                 pos = pg.mouse.get_pos()
                 piece = [s for s in self.all_sprites if s.rect.collidepoint(pos)]
                 if len(piece) > 0:
-                    if self.moves != piece[0].valid_moves():
-                        self.moves = piece[0].valid_moves()
+                    if piece[0].color == self.turn:
+                        all_moves = piece[0].valid_moves()
                         self.current_piece = piece[0]
-                        self.rect_moves = []
-                        for move in self.moves:
-                            self.rect_moves.append(
-                                pg.Rect(TILE * move[0] + TILE * 0.075, TILE * move[1] + TILE * 0.075, TILE * 0.85,
-                                        TILE * 0.85))
-                        print(self.rect_moves)
-                    else:
-                        self.rect_moves = []
-                        self.moves = []
-                    # print(self.moves)
+                        if self.moves != all_moves["moves"]:
+                            self.moves = all_moves["moves"]
+                            self.rect_moves = []
+                            for move in self.moves:
+                                self.rect_moves.append(
+                                    pg.Rect(TILE * move[0] + TILE * 0.075, TILE * move[1] + TILE * 0.075, TILE * 0.85,
+                                            TILE * 0.85))
+                            print(self.moves)
+                        else:
+                            self.rect_moves = []
+                            self.moves = []
+
+                        if self.pos_kills != all_moves["kills"]:
+                            self.pos_kills = all_moves["kills"]
+                            self.rect_kills = []
+                            for kill in self.pos_kills:
+                                self.rect_kills.append(
+                                    pg.Rect(TILE * kill[0] + TILE * 0.075, TILE * kill[1] + TILE * 0.075, TILE * 0.85,
+                                            TILE * 0.85))
+                            print(self.pos_kills)
+                        else:
+                            self.pos_kills = []
+                            self.rect_kills = []
 
             if event.type == pg.MOUSEBUTTONDOWN:
                 mouse_pos = pg.mouse.get_pos()  # get the mouse pos
@@ -166,12 +188,37 @@ class Game:
                         j = self.moves[i][0]
                         k = self.moves[i][1]
                         self.current_piece.handle_movement(TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5))
+                        self.turn = self.opponent(self.turn)
                         new_pos = [j, k]
                         self.update_board(self.current_piece.pos, new_pos, self.current_piece.symbol)
                         self.current_piece.pos = new_pos
                         self.moves = []
                         self.rect_moves = []
+                        self.pos_kills = []
+                        self.rect_kills = []
                         break
+
+                for i in range(len(self.rect_kills)):
+                    if self.rect_kills[i].collidepoint(mouse_pos):
+                        # print(self.current_piece)
+                        # print("Hello world")
+                        pos = pg.mouse.get_pos()
+                        piece = [s for s in self.all_sprites if s.rect.collidepoint(pos)]
+                        print(self.current_piece)
+                        piece[0].kill()
+                        j = self.pos_kills[i][0]
+                        k = self.pos_kills[i][1]
+                        self.current_piece.handle_movement(TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5))
+                        self.turn = self.opponent(self.turn)
+                        new_pos = [j, k]
+                        self.update_board(self.current_piece.pos, new_pos, self.current_piece.symbol)
+                        self.current_piece.pos = new_pos
+                        self.moves = []
+                        self.rect_moves = []
+                        self.pos_kills = []
+                        self.rect_kills = []
+                        break
+
 
     def update_board(self, current_pos, new_pos, symbol):
         self.board[current_pos[1]][current_pos[0]] = ""
@@ -198,10 +245,14 @@ class Game:
                 else:
                     pg.draw.rect(self.display, WHITE, ((i * TILE * 2) + TILE, j * TILE, TILE, TILE))
 
-        self.all_sprites.draw(self.display)
         for move in self.rect_moves:
             pg.draw.rect(self.display, GREEN, move)
 
+
+
+        for kill in self.rect_kills:
+            pg.draw.rect(self.display, RED, kill)
+        self.all_sprites.draw(self.display)
         pg.display.update()
 
 

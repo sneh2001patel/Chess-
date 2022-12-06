@@ -31,32 +31,95 @@ class King(pg.sprite.Sprite):
 
     def valid_moves(self):
         moves = []
+        kills = []
 
-        if (self.pos[1] - 1 >= 0) and (self.pos[0] + 1 <= 7) and (
-                self.game.board[self.pos[1] - 1][self.pos[0] + 1] == ""):
-            moves.append([self.pos[0] + 1, self.pos[1] - 1])
+        if (self.pos[1] - 1 >= 0) and (self.pos[0] + 1 <= 7):
+            if self.game.board[self.pos[1] - 1][self.pos[0] + 1] == "":
+                moves.append([self.pos[0] + 1, self.pos[1] - 1])
+            else:
+                if self.color == 0:
+                    if "b" in self.game.board[self.pos[1] - 1][self.pos[0] + 1]:
+                        kills.append([self.pos[0] + 1, self.pos[1] - 1])
+                if self.color == 1:
+                    if "b" not in self.game.board[self.pos[1] - 1][self.pos[0] + 1]:
+                        kills.append([self.pos[0] + 1, self.pos[1] - 1])
 
-        if (self.pos[1] - 1 >= 0) and (self.pos[0] - 1 >= 0) and (
-                self.game.board[self.pos[1] - 1][self.pos[0] - 1] == ""):
-            moves.append([self.pos[0] - 1, self.pos[1] - 1])
+        if (self.pos[1] - 1 >= 0) and (self.pos[0] - 1 >= 0):
+            if self.game.board[self.pos[1] - 1][self.pos[0] - 1] == "":
+                moves.append([self.pos[0] - 1, self.pos[1] - 1])
+            else:
+                if self.color == 0:
+                    if "b" in self.game.board[self.pos[1] - 1][self.pos[0] - 1]:
+                        kills.append([self.pos[0] - 1, self.pos[1] - 1])
+                if self.color == 1:
+                    if "b" not in self.game.board[self.pos[1] - 1][self.pos[0] - 1]:
+                        kills.append([self.pos[0] - 1, self.pos[1] - 1])
 
-        if (self.pos[1] + 1 <= 7) and (self.pos[0] + 1 <= 7) and (
-                self.game.board[self.pos[1] + 1][self.pos[0] + 1] == ""):
-            moves.append([self.pos[0] + 1, self.pos[1] + 1])
+        if (self.pos[1] + 1 <= 7) and (self.pos[0] + 1 <= 7):
+            if self.game.board[self.pos[1] + 1][self.pos[0] + 1] == "":
+                moves.append([self.pos[0] + 1, self.pos[1] + 1])
+            else:
+                if self.color == 0:
+                    if "b" in self.game.board[self.pos[1] + 1][self.pos[0] + 1]:
+                        kills.append([self.pos[0] + 1, self.pos[1] + 1])
+                if self.color == 1:
+                    if "b" not in self.game.board[self.pos[1] + 1][self.pos[0] + 1]:
+                        kills.append([self.pos[0] + 1, self.pos[1] + 1])
 
-        if (self.pos[1] + 1 <= 7) and (self.pos[0] - 1 >= 0) and (
-                self.game.board[self.pos[1] + 1][self.pos[0] - 1] == ""):
-            moves.append([self.pos[0] - 1, self.pos[1] + 1])
+        if (self.pos[1] + 1 <= 7) and (self.pos[0] - 1 >= 0):
+            if self.game.board[self.pos[1] + 1][self.pos[0] - 1] == "":
+                moves.append([self.pos[0] - 1, self.pos[1] + 1])
+            else:
+                if self.color == 0:
+                    if "b" in self.game.board[self.pos[1] + 1][self.pos[0] - 1]:
+                        kills.append([self.pos[0] - 1, self.pos[1] + 1])
+                if self.color == 1:
+                    if "b" not in self.game.board[self.pos[1] + 1][self.pos[0] - 1]:
+                        kills.append([self.pos[0] - 1, self.pos[1] + 1])
 
-        if (self.pos[1] - 1 >= 0) and (self.game.board[self.pos[1] - 1][self.pos[0]] == ""):
-            moves.append([self.pos[0], self.pos[1] - 1])
+        if self.pos[1] - 1 >= 0:
+            if self.game.board[self.pos[1] - 1][self.pos[0]] == "":
+                moves.append([self.pos[0], self.pos[1] - 1])
+            else:
+                if self.color == 0:
+                    if "b" in self.game.board[self.pos[1] - 1][self.pos[0]]:
+                        kills.append([self.pos[0], self.pos[1] - 1])
+                if self.color == 1:
+                    if "b" not in self.game.board[self.pos[1] - 1][self.pos[0]]:
+                        kills.append([self.pos[0], self.pos[1] - 1])
 
-        if (self.pos[1] + 1 <= 7) and (self.game.board[self.pos[1] + 1][self.pos[0]] == ""):
-            moves.append([self.pos[0], self.pos[1] + 1])
+        if self.pos[1] + 1 <= 7:
+            if self.game.board[self.pos[1] + 1][self.pos[0]] == "":
+                moves.append([self.pos[0], self.pos[1] + 1])
+            else:
+                if self.color == 0:
+                    if "b" in self.game.board[self.pos[1] + 1][self.pos[0]]:
+                        kills.append([self.pos[0], self.pos[1] + 1])
+                if self.color == 1:
+                    if "b" not in self.game.board[self.pos[1] + 1][self.pos[0]]:
+                        kills.append([self.pos[0], self.pos[1] + 1])
 
-        if (self.pos[0] - 1 >= 0) and (self.game.board[self.pos[1]][self.pos[0] - 1] == ""):
-            moves.append([self.pos[0] - 1, self.pos[1]])
+        if self.pos[0] - 1 >= 0:
+            if self.game.board[self.pos[1]][self.pos[0] - 1] == "":
+                moves.append([self.pos[0] - 1, self.pos[1]])
+            else:
+                if self.color == 0:
+                    if "b" in self.game.board[self.pos[1]][self.pos[0] - 1]:
+                        kills.append([self.pos[0] - 1, self.pos[1]])
+                if self.color == 1:
+                    if "b" not in self.game.board[self.pos[1]][self.pos[0] - 1]:
+                        kills.append([self.pos[0] - 1, self.pos[1]])
 
-        if (self.pos[0] + 1 <= 7) and (self.game.board[self.pos[1]][self.pos[0] + 1] == ""):
-            moves.append([self.pos[0] + 1, self.pos[1]])
-        return moves
+        if (self.pos[0] + 1 <= 7):
+            if (self.game.board[self.pos[1]][self.pos[0] + 1] == ""):
+                moves.append([self.pos[0] + 1, self.pos[1]])
+            else:
+                if self.color == 0:
+                    if "b" in self.game.board[self.pos[1]][self.pos[0] + 1]:
+                        kills.append([self.pos[0] + 1, self.pos[1]])
+                if self.color == 1:
+                    if "b" not in self.game.board[self.pos[1]][self.pos[0] + 1]:
+                        kills.append([self.pos[0] + 1, self.pos[1]])
+
+
+        return {"moves": moves, "kills": kills}

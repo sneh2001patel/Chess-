@@ -31,6 +31,7 @@ class Rook(pg.sprite.Sprite):
 
     def valid_moves(self):
         moves = []
+        kills = []
         # print("Current: ", self.game.board[self.pos[1]][self.pos[0]])
         # print("Up: ", self.game.board[self.pos[1] - 1][self.pos[0]])
         # print("Down: ", self.game.board[self.pos[1] + 1][self.pos[0]])
@@ -46,6 +47,15 @@ class Rook(pg.sprite.Sprite):
             else:
                 break
 
+        if self.pos[1] - i >= 0:
+            if self.color == 0:
+                if "b" in self.game.board[self.pos[1] - i][self.pos[0]]:
+                    kills.append([self.pos[0], self.pos[1] - i])
+            if self.color == 1:
+                if ("b" not in self.game.board[self.pos[1] - i][self.pos[0]]) and (
+                        self.game.board[self.pos[1] - i][self.pos[0]] != ""):
+                    kills.append([self.pos[0], self.pos[1] - i])
+
         # Down Direction
         j = 1
         while True:
@@ -54,6 +64,14 @@ class Rook(pg.sprite.Sprite):
                 j += 1
             else:
                 break
+        if self.pos[1] + j <= 7:
+            if self.color == 0:
+                if "b" in self.game.board[self.pos[1] + j][self.pos[0]]:
+                    kills.append([self.pos[0], self.pos[1] + j])
+            if self.color == 1:
+                if ("b" not in self.game.board[self.pos[1] + j][self.pos[0]]) and (
+                        self.game.board[self.pos[1] + j][self.pos[0]] != ""):
+                    kills.append([self.pos[0], self.pos[1] + j])
 
         # Left Direction
         k = 1
@@ -63,7 +81,14 @@ class Rook(pg.sprite.Sprite):
                 k += 1
             else:
                 break
-
+        if self.pos[0] - k >= 0:
+            if self.color == 0:
+                if "b" in self.game.board[self.pos[1]][self.pos[0] - k]:
+                    kills.append([self.pos[0] - k, self.pos[1]])
+            if self.color == 1:
+                if ("b" not in self.game.board[self.pos[1]][self.pos[0] - k]) and (
+                        self.game.board[self.pos[1]][self.pos[0] - k] != ""):
+                    kills.append([self.pos[0] - k, self.pos[1]])
         # # Right Direction
         m = 1
         while True:
@@ -73,5 +98,13 @@ class Rook(pg.sprite.Sprite):
                 m += 1
             else:
                 break
+        if self.pos[0] + m <= 7:
+            if self.color == 0:
+                if "b" in self.game.board[self.pos[1]][self.pos[0] + m]:
+                    kills.append([self.pos[0] + m, self.pos[1]])
+            if self.color == 1:
+                if ("b" not in self.game.board[self.pos[1]][self.pos[0] + m]) and (
+                        self.game.board[self.pos[1]][self.pos[0] + m] != ""):
+                    kills.append([self.pos[0] + m, self.pos[1]])
 
-        return moves
+        return {"moves": moves, "kills": kills}

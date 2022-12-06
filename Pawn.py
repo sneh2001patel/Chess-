@@ -23,10 +23,8 @@ class Pawn(pg.sprite.Sprite):
 
     def update(self):
         pass
-        # self.rect.center = (self.x, self.y)
 
-        # pg.draw.rect(self.game.display, GREEN, pg.Rect(TILE * 0 + 25, TILE * 5 + 25, 50, 50))
-        # pg.draw.rect(self.game.display, GREEN, pg.Rect(TILE * 0 + 50, TILE * 5 + 50, 50, 50))
+
 
     def handle_movement(self, x, y):
         self.x = x
@@ -34,8 +32,11 @@ class Pawn(pg.sprite.Sprite):
         self.rect.center = (self.x, self.y)
         self.has_moved = True
 
+
     def valid_moves(self):
         moves = []
+        kills = []
+        # Possible Moves
         if not self.has_moved:
             if self.color == 0:
                 for i in range(1, 3):
@@ -57,4 +58,27 @@ class Pawn(pg.sprite.Sprite):
             if self.color == 1:
                 if (self.pos[1] + 1 <= 7) and (self.game.board[self.pos[1] + 1][self.pos[0]] == ""):
                     moves.append([self.pos[0], self.pos[1] + 1])
-        return moves
+
+        # Kills
+        if self.color == 0:  # white
+            if ("b" in self.game.board[self.pos[1] - 1][self.pos[0] + 1]) and (self.pos[1] - 1 >= 0) and (
+                    self.pos[0] + 1 <= 7):
+                kills.append([self.pos[0] + 1, self.pos[1] - 1])
+
+            if ("b" in self.game.board[self.pos[1] - 1][self.pos[0] - 1]) and (self.pos[1] - 1 >= 0) and (
+                    self.pos[0] - 1 >= 0):
+                kills.append([self.pos[0] - 1, self.pos[1] - 1])
+        if self.color == 1:  # black
+            if (self.pos[1] + 1 <= 7) and (self.pos[0] - 1 >= 0):
+                if ("b" not in self.game.board[self.pos[1] + 1][self.pos[0] - 1]) and (
+                        self.game.board[self.pos[1] + 1][self.pos[0] - 1] != ""):
+                    kills.append([self.pos[0] - 1, self.pos[1] + 1])
+
+            if (self.pos[1] + 1 <= 7) and (self.pos[0] + 1 <= 7):
+                if ("b" not in self.game.board[self.pos[1] + 1][self.pos[0] + 1]) and (
+                        self.game.board[self.pos[1] + 1][self.pos[0] + 1] != ""):
+                    kills.append([self.pos[0] + 1, self.pos[1] + 1])
+
+
+
+        return {"moves": moves, "kills": kills}
