@@ -30,7 +30,7 @@ class Knight(pg.sprite.Sprite):
         self.y = y
         self.rect.center = (self.x, self.y)
 
-    def valid_moves(self):
+    def valid_moves(self, impossible=[], king_check=False, checkMoves=[], numChecks=0):
         moves = []
         kills = []
         # print("Current: ", self.game.board[self.pos[1]][self.pos[0]])
@@ -50,7 +50,6 @@ class Knight(pg.sprite.Sprite):
                     if "b" not in self.game.board[self.pos[1] - 1][self.pos[0] + 2]:
                         kills.append([self.pos[0] + 2, self.pos[1] - 1])
 
-
         if (self.pos[1] - 2 >= 0) and (self.pos[0] + 1 <= 7):
             if self.game.board[self.pos[1] - 2][self.pos[0] + 1] == "":
                 moves.append([self.pos[0] + 1, self.pos[1] - 2])
@@ -61,7 +60,6 @@ class Knight(pg.sprite.Sprite):
                 if self.color == 1:
                     if "b" not in self.game.board[self.pos[1] - 2][self.pos[0] + 1]:
                         kills.append([self.pos[0] + 1, self.pos[1] - 2])
-
 
         if (self.pos[1] - 2 >= 0) and (self.pos[0] - 1 >= 0):
             if self.game.board[self.pos[1] - 2][self.pos[0] - 1] == "":
@@ -129,28 +127,40 @@ class Knight(pg.sprite.Sprite):
                     if "b" not in self.game.board[self.pos[1] + 2][self.pos[0] + 1]:
                         kills.append([self.pos[0] + 1, self.pos[1] + 2])
 
-        # if (self.pos[1] - 1 >= 0) and (self.pos[0] - 1 >= 0) and (
-        #         self.game.board[self.pos[1] - 1][self.pos[0] - 1] == ""):
-        #     moves.append([self.pos[0] - 1, self.pos[1] - 1])
-        #
-        # if (self.pos[1] + 1 <= 7) and (self.pos[0] + 1 <= 7) and (
-        #         self.game.board[self.pos[1] + 1][self.pos[0] + 1] == ""):
-        #     moves.append([self.pos[0] + 1, self.pos[1] + 1])
-        #
-        # if (self.pos[1] + 1 <= 7) and (self.pos[0] - 1 >= 0) and (
-        #         self.game.board[self.pos[1] + 1][self.pos[0] - 1] == ""):
-        #     moves.append([self.pos[0] - 1, self.pos[1] + 1])
-        #
-        # if (self.pos[1] - 1 >= 0) and (self.game.board[self.pos[1] - 1][self.pos[0]] == ""):
-        #     moves.append([self.pos[0], self.pos[1] - 1])
-        #
-        # if (self.pos[1] + 1 <= 7) and (self.game.board[self.pos[1] + 1][self.pos[0]] == ""):
-        #     moves.append([self.pos[0], self.pos[1] + 1])
-        #
-        # if (self.pos[0] - 1 >= 0) and (self.game.board[self.pos[1]][self.pos[0] - 1] == ""):
-        #     moves.append([self.pos[0] - 1, self.pos[1]])
-        #
-        # if (self.pos[0] + 1 <= 7) and (self.game.board[self.pos[1]][self.pos[0] + 1] == ""):
-        #     moves.append([self.pos[0] + 1, self.pos[1]])
+        if king_check and numChecks == 1:
+            moves = [i for i in checkMoves if i in moves]
+            kills = [i for i in checkMoves if i in kills]
+        elif numChecks > 1:
+            moves = []
+            kills = []
 
         return {"moves": moves, "kills": kills}
+
+    def all_position(self,  board, updated=[]):
+        moves = []
+
+        if (self.pos[1] - 1 >= 0) and (self.pos[0] + 2 <= 7):
+            moves.append([self.pos[0] + 2, self.pos[1] - 1])
+
+        if (self.pos[1] - 2 >= 0) and (self.pos[0] + 1 <= 7):
+            moves.append([self.pos[0] + 1, self.pos[1] - 2])
+
+        if (self.pos[1] - 2 >= 0) and (self.pos[0] - 1 >= 0):
+            moves.append([self.pos[0] - 1, self.pos[1] - 2])
+
+        if (self.pos[1] + 2 <= 7) and (self.pos[0] - 1 >= 0):
+            moves.append([self.pos[0] - 1, self.pos[1] + 2])
+
+        if (self.pos[1] + 1 <= 7) and (self.pos[0] - 2 >= 0):
+            moves.append([self.pos[0] - 2, self.pos[1] + 1])
+
+        if (self.pos[1] - 1 >= 0) and (self.pos[0] - 2 >= 0):
+            moves.append([self.pos[0] - 2, self.pos[1] - 1])
+
+        if (self.pos[1] + 1 <= 7) and (self.pos[0] + 2 <= 7):
+            moves.append([self.pos[0] + 2, self.pos[1] + 1])
+
+        if (self.pos[1] + 2 <= 7) and (self.pos[0] + 1 <= 7):
+            moves.append([self.pos[0] + 1, self.pos[1] + 2])
+
+        return moves

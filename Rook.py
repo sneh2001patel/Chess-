@@ -29,7 +29,7 @@ class Rook(pg.sprite.Sprite):
         self.y = y
         self.rect.center = (self.x,self.y)
 
-    def valid_moves(self):
+    def valid_moves(self, impossible=[], king_check=False, checkMoves=[], numChecks=0):
         moves = []
         kills = []
         # print("Current: ", self.game.board[self.pos[1]][self.pos[0]])
@@ -107,4 +107,77 @@ class Rook(pg.sprite.Sprite):
                         self.game.board[self.pos[1]][self.pos[0] + m] != ""):
                     kills.append([self.pos[0] + m, self.pos[1]])
 
+        if king_check and numChecks == 1:
+            moves = [i for i in checkMoves if i in moves]
+            kills = [i for i in checkMoves if i in kills]
+        elif numChecks > 1:
+            moves = []
+            kills = []
+
         return {"moves": moves, "kills": kills}
+
+    def all_position(self,  board, updated=[]):
+        moves = []
+        # Up directions
+        i = 1
+        while True:
+            if self.pos[1] - i >= 0:
+                move = board[self.pos[1] - i][self.pos[0]]
+                if self.color == 0:
+                    if move != "" and move != "bK":
+                        break
+                else:
+                    if move != "K" and move != "":
+                        break
+                moves.append([self.pos[0], self.pos[1] - i])
+                i += 1
+            else:
+                break
+
+        # Down Direction
+        j = 1
+        while True:
+            if self.pos[1] + j <= 7:
+                move = board[self.pos[1] + j][self.pos[0]]
+                if self.color == 0:
+                    if move != "" and move != "bK":
+                        break
+                else:
+                    if move != "K" and move != "":
+                        break
+                moves.append([self.pos[0], self.pos[1] + j])
+                j += 1
+            else:
+                break
+        # Left Direction
+        k = 1
+        while True:
+            if self.pos[0] - k >= 0:
+                move = board[self.pos[1]][self.pos[0] - k]
+                if self.color == 0:
+                    if move != "" and move != "bK":
+                        break
+                else:
+                    if move != "K" and move != "":
+                        break
+                moves.append([self.pos[0] - k, self.pos[1]])
+                k += 1
+            else:
+                break
+        # Right Direction
+        m = 1
+        while True:
+            if self.pos[0] + m <= 7:
+                move = board[self.pos[1]][self.pos[0] + m]
+                if self.color == 0:
+                    if move != "" and move != "bK":
+                        break
+                else:
+                    if move != "K" and move != "":
+                        break
+                # print("Ads")
+                moves.append([self.pos[0] + m, self.pos[1]])
+                m += 1
+            else:
+                break
+        return moves

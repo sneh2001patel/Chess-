@@ -30,7 +30,7 @@ class Bishop(pg.sprite.Sprite):
         self.y = y
         self.rect.center = (self.x, self.y)
 
-    def valid_moves(self):
+    def valid_moves(self, impossible=[], king_check=False, checkMoves=[], numChecks=0):
         moves = []
         kills = []
         # print("Current: ", self.game.board[self.pos[1]][self.pos[0]])
@@ -42,7 +42,8 @@ class Bishop(pg.sprite.Sprite):
         # Up-right directions
         i = 1
         while True:
-            if (self.pos[1] - i >= 0) and (self.pos[0] + i <= 7) and (self.game.board[self.pos[1] - i][self.pos[0] + i] == ""):
+            if (self.pos[1] - i >= 0) and (self.pos[0] + i <= 7) and (
+                    self.game.board[self.pos[1] - i][self.pos[0] + i] == ""):
                 moves.append([self.pos[0] + i, self.pos[1] - i])
                 i += 1
             else:
@@ -59,7 +60,8 @@ class Bishop(pg.sprite.Sprite):
         # Up-Left directions
         j = 1
         while True:
-            if (self.pos[1] - j >= 0) and (self.pos[0] - j >= 0) and (self.game.board[self.pos[1] - j][self.pos[0] - j] == ""):
+            if (self.pos[1] - j >= 0) and (self.pos[0] - j >= 0) and (
+                    self.game.board[self.pos[1] - j][self.pos[0] - j] == ""):
                 moves.append([self.pos[0] - j, self.pos[1] - j])
                 j += 1
             else:
@@ -75,7 +77,8 @@ class Bishop(pg.sprite.Sprite):
         # down-right directions
         k = 1
         while True:
-            if (self.pos[1] + k <= 7) and (self.pos[0] + k <= 7) and (self.game.board[self.pos[1] + k][self.pos[0] + k] == ""):
+            if (self.pos[1] + k <= 7) and (self.pos[0] + k <= 7) and (
+                    self.game.board[self.pos[1] + k][self.pos[0] + k] == ""):
                 moves.append([self.pos[0] + k, self.pos[1] + k])
                 k += 1
             else:
@@ -93,7 +96,8 @@ class Bishop(pg.sprite.Sprite):
         # down-right directions
         m = 1
         while True:
-            if (self.pos[1] + m <= 7) and (self.pos[0] - m >= 0) and (self.game.board[self.pos[1] + m][self.pos[0] - m] == ""):
+            if (self.pos[1] + m <= 7) and (self.pos[0] - m >= 0) and (
+                    self.game.board[self.pos[1] + m][self.pos[0] - m] == ""):
                 moves.append([self.pos[0] - m, self.pos[1] + m])
                 m += 1
             else:
@@ -107,5 +111,77 @@ class Bishop(pg.sprite.Sprite):
                         self.game.board[self.pos[1] + m][self.pos[0] - m] != ""):
                     kills.append([self.pos[0] - m, self.pos[1] + m])
 
+        if king_check and numChecks == 1:
+            moves = [i for i in checkMoves if i in moves]
+            kills = [i for i in checkMoves if i in kills]
+        elif numChecks > 1:
+            moves = []
+            kills = []
 
         return {"moves": moves, "kills": kills}
+
+    def all_position(self,  board, updated=[]):
+        moves = []
+        i = 1
+        while True:
+            if (self.pos[1] - i >= 0) and (self.pos[0] + i <= 7):
+                move = board[self.pos[1] - i][self.pos[0] + i]
+                if self.color == 0:
+                    if move != "" and move != "bK":
+                        break
+                else:
+                    if move != "K" and move != "":
+                        break
+                moves.append([self.pos[0] + i, self.pos[1] - i])
+                i += 1
+            else:
+                break
+
+        # Up-Left directions
+        j = 1
+        while True:
+            if (self.pos[1] - j >= 0) and (self.pos[0] - j >= 0):
+                move = board[self.pos[1] - j][self.pos[0] - j]
+                if self.color == 0:
+                    if move != "" and move != "bK":
+                        break
+                else:
+                    if move != "K" and move != "":
+                        break
+                moves.append([self.pos[0] - j, self.pos[1] - j])
+                j += 1
+            else:
+                break
+        # down-right directions
+        k = 1
+        while True:
+            if (self.pos[1] + k <= 7) and (self.pos[0] + k <= 7):
+                move = board[self.pos[1] + k][self.pos[0] + k]
+                if self.color == 0:
+                    if move != "" and move != "bK":
+                        break
+                else:
+                    if move != "K" and move != "":
+                        break
+                moves.append([self.pos[0] + k, self.pos[1] + k])
+                k += 1
+            else:
+                break
+
+        # down-right directions
+        m = 1
+        while True:
+            if (self.pos[1] + m <= 7) and (self.pos[0] - m >= 0):
+                move = board[self.pos[1] + m][self.pos[0] - m]
+                if self.color == 0:
+                    if move != "" and move != "bK":
+                        break
+                else:
+                    if move != "K" and move != "":
+                        break
+                moves.append([self.pos[0] - m, self.pos[1] + m])
+                m += 1
+            else:
+                break
+
+        return moves

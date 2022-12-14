@@ -4,7 +4,7 @@ BOARDLEN = 8
 WIDTH = TILE * BOARDLEN
 HEIGHT = TILE * BOARDLEN
 TITLE = "Chess"
-FPS = 60
+FPS = 10
 
 # Colours
 BLACK = (0, 0, 0)
