@@ -25,9 +25,23 @@ class Pawn(pg.sprite.Sprite):
     def update(self):
         pass
 
+    def choose_piece(self):
+        s_out = "Pawn has reached the end of the board please pick which piece you want (Q, H, R, B): "
+        while True:
+            s = input(s_out)
+            s = s.upper()
+            if s == "Q" or s == "H" or s == "R" or s == "B":
+                return s
+            else:
+                s_out = "Invalid Input please give a proper input (Q, H, R, B): "
+
     def handle_movement(self, x, y):
         self.x = x
         self.y = y
+        if self.color == 0:
+            self.game.white_check = False
+        else:
+            self.game.black_check = False
         self.rect.center = (self.x, self.y)
         self.has_moved = True
 

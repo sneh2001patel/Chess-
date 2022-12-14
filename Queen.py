@@ -28,6 +28,10 @@ class Queen(pg.sprite.Sprite):
     def handle_movement(self, x, y):
         self.x = x
         self.y = y
+        if self.color == 0:
+            self.game.white_check = False
+        else:
+            self.game.black_check = False
         self.rect.center = (self.x, self.y)
 
     def valid_moves(self, impossible=[], king_check=False, checkMoves=[], numChecks=0):

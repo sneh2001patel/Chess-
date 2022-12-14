@@ -267,9 +267,10 @@ class Game:
                     self.checkCol = BLUE
                     # self.running = False
         # self.num_checks = 0
+        # self.white_check = False
+        # self.black_check = False
         print("White King Check: ", self.white_check)
         print("Black King Check: ", self.black_check)
-
 
     def block_exists(self, check_moves):
         pieces_moves = self.get_all_moves(self.turn, False)
@@ -496,8 +497,6 @@ class Game:
             return movs
 
     def isubset(self, arr1, arr2):
-        # print("Print arr1: ", arr1)
-        # print("Print arr2: ", arr2)
         for i in arr2:
             if i not in arr1:
                 return False
@@ -547,15 +546,13 @@ class Game:
                 piece = [s for s in self.all_sprites if s.rect.collidepoint(pos)]
                 if len(piece) > 0:
                     if piece[0].color == self.turn:
-                        # print("afas:", piece[0].pos)
-                        # print(type(piece[0]))
-                        # if type(piece[0]) == King:
-                        #     all_moves = piece[0].valid_moves(self.impossible)
+
                         king_check = self.white_check
                         if piece[0].color == 1:
                             king_check = self.black_check
 
-                        all_moves = piece[0].valid_moves(self.impossible, king_check, self.check_spaces, self.num_checks)
+                        all_moves = piece[0].valid_moves(self.impossible, king_check, self.check_spaces,
+                                                         self.num_checks)
                         self.current_piece = piece[0]
                         if self.moves != all_moves["moves"]:
                             self.moves = all_moves["moves"]
@@ -593,6 +590,50 @@ class Game:
                         new_pos = [j, k]
                         self.update_board(self.current_piece.pos, new_pos, self.current_piece.symbol)
                         self.current_piece.pos = new_pos
+                        if type(self.current_piece) == Pawn:
+                            if self.current_piece.pos[1] == 0 and self.current_piece.color == 0:
+                                p = self.current_piece.choose_piece()
+                                piece = None
+                                sym = p
+                                if p == "Q":
+                                    piece = Queen(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                                  self.current_piece.color, new_pos, sym)
+                                elif p == "H":
+                                    piece = Knight(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                                   self.current_piece.color, new_pos, sym)
+                                elif p == "B":
+                                    piece = Bishop(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                                   self.current_piece.color, new_pos, sym)
+                                elif p == "R":
+                                    piece = Rook(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                                 self.current_piece.color, new_pos, sym)
+
+                                self.all_sprites.add(piece)
+                                self.white_sprites.add(piece)
+                                self.current_piece.kill()
+                                self.board[k][j] = sym
+                            if self.current_piece.pos[1] == 7 and self.current_piece.color == 1:
+                                p = self.current_piece.choose_piece()
+                                piece = None
+                                sym = p
+                                sym = "b" + sym
+                                if p == "Q":
+                                    piece = Queen(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                                  self.current_piece.color, new_pos, sym)
+                                elif p == "H":
+                                    piece = Knight(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                                   self.current_piece.color, new_pos, sym)
+                                elif p == "B":
+                                    piece = Bishop(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                                   self.current_piece.color, new_pos, sym)
+                                elif p == "R":
+                                    piece = Rook(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                                 self.current_piece.color, new_pos, sym)
+
+                                self.all_sprites.add(piece)
+                                self.black_sprites.add(piece)
+                                self.current_piece.kill()
+                                self.board[k][j] = sym
 
                         self.impossible = self.get_all_moves(self.opponent(self.turn))
                         king = self.get_king(self.turn)
@@ -619,6 +660,51 @@ class Game:
                         new_pos = [j, k]
                         self.update_board(self.current_piece.pos, new_pos, self.current_piece.symbol)
                         self.current_piece.pos = new_pos
+
+                        if type(self.current_piece) == Pawn:
+                            if self.current_piece.pos[1] == 0 and self.current_piece.color == 0:
+                                p = self.current_piece.choose_piece()
+                                piece = None
+                                sym = p
+                                if p == "Q":
+                                    piece = Queen(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                                  self.current_piece.color, new_pos, sym)
+                                elif p == "H":
+                                    piece = Knight(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                                   self.current_piece.color, new_pos, sym)
+                                elif p == "B":
+                                    piece = Bishop(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                                   self.current_piece.color, new_pos, sym)
+                                elif p == "R":
+                                    piece = Rook(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                                 self.current_piece.color, new_pos, sym)
+
+                                self.all_sprites.add(piece)
+                                self.white_sprites.add(piece)
+                                self.current_piece.kill()
+                                self.board[k][j] = sym
+                            if self.current_piece.pos[1] == 7 and self.current_piece.color == 1:
+                                p = self.current_piece.choose_piece()
+                                piece = None
+                                sym = p
+                                sym = "b" + sym
+                                if p == "Q":
+                                    piece = Queen(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                                  self.current_piece.color, new_pos, sym)
+                                elif p == "H":
+                                    piece = Knight(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                                   self.current_piece.color, new_pos, sym)
+                                elif p == "B":
+                                    piece = Bishop(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                                   self.current_piece.color, new_pos, sym)
+                                elif p == "R":
+                                    piece = Rook(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                                 self.current_piece.color, new_pos, sym)
+
+                                self.all_sprites.add(piece)
+                                self.black_sprites.add(piece)
+                                self.current_piece.kill()
+                                self.board[k][j] = sym
 
                         self.impossible = self.get_all_moves(self.opponent(self.turn))
                         king = self.get_king(self.turn)
