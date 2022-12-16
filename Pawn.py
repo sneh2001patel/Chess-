@@ -25,15 +25,18 @@ class Pawn(pg.sprite.Sprite):
     def update(self):
         pass
 
-    def choose_piece(self):
-        s_out = "Pawn has reached the end of the board please pick which piece you want (Q, H, R, B): "
-        while True:
-            s = input(s_out)
-            s = s.upper()
-            if s == "Q" or s == "H" or s == "R" or s == "B":
-                return s
-            else:
-                s_out = "Invalid Input please give a proper input (Q, H, R, B): "
+    def choose_piece(self, ai=False):
+        if not ai:
+            s_out = "Pawn has reached the end of the board please pick which piece you want (Q, H, R, B): "
+            while True:
+                s = input(s_out)
+                s = s.upper()
+                if s == "Q" or s == "H" or s == "R" or s == "B":
+                    return s
+                else:
+                    s_out = "Invalid Input please give a proper input (Q, H, R, B): "
+        else:
+            return random.choice(["Q", "H", "R", "B"])
 
     def handle_movement(self, x, y):
         self.x = x
