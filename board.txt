@@ -1,8 +1,8 @@
-bR bH bB bQ bK bB bH bR
-bP bP bP bP bP bP bP bP
+. . bQ bK . . . .
+. . B . . . R .
 . . . . . . . .
 . . . . . . . .
 . . . . . . . .
 . . . . . . . .
-P P P P P P P P
-R H B Q K B H R
+. . . . . . . .
+. . . . K . . P

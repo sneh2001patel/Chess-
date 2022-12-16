@@ -133,6 +133,7 @@ class Pawn(pg.sprite.Sprite):
 
         k = self.game.get_king(a)
         return self.game.ischeck(k.pos, moves)
+
     def all_position(self, board, updated=[]):
         moves = []
 

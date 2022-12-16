@@ -42,7 +42,7 @@ class Game:
         self.num_checks = 0
         self.check_spaces = []
         self.test = []
-        # self.test1 = []
+        self.test1 = []
 
     def load_data(self):
         self.board = []
@@ -503,6 +503,32 @@ class Game:
                 return False
         return True
 
+    def piece_on_board(self, board, color):
+        if color == 0:
+            pieces = []
+            for row in board:
+                for spot in row:
+                    if spot != "":
+                        if "b" not in spot:
+                            pieces.append(spot)
+            return pieces
+        else:
+            pieces = []
+            for row in board:
+                for spot in row:
+                    if spot != "":
+                        if "b" in spot:
+                            pieces.append(spot)
+            return pieces
+
+    def get_sprite(self, symbol, color):
+        sprites = self.white_sprites
+        if color == 1:
+            sprites = self.black_sprites
+        for sprite in sprites:
+            if sprite.symbol == symbol:
+                return sprite
+
     def find_piece(self, pos):
         for sprite in self.all_sprites:
             if sprite.pos == pos:
@@ -761,13 +787,14 @@ class Game:
         for t in self.test:
             pg.draw.rect(self.display, self.checkCol, (
                 TILE * t[0] + TILE * 0.075, TILE * t[1] + TILE * 0.075, TILE * 0.85, TILE * 0.85))
-        # print(self.test1)
-        # for t in self.test1:
-        #     pg.draw.rect(self.display, self.checkCol, (
-        #         TILE * self.test1[0][0] + TILE * 0.075, TILE * self.test1[0][1] + TILE * 0.075, TILE * 0.85, TILE * 0.85))
+        for t in self.test1:
+            pg.draw.rect(self.display, NAVY, (
+                TILE * t[0] + TILE * 0.075, TILE * t[1] + TILE * 0.075, TILE * 0.85, TILE * 0.85))
+
         if self.current_piece != None and (self.moves or self.pos_kills):
             pg.draw.rect(self.display, YELLOW, (
-                TILE * self.current_piece.pos[0] + TILE * 0.075, TILE * self.current_piece.pos[1] + TILE * 0.075, TILE * 0.85, TILE * 0.85))
+                TILE * self.current_piece.pos[0] + TILE * 0.075, TILE * self.current_piece.pos[1] + TILE * 0.075,
+                TILE * 0.85, TILE * 0.85))
         self.all_sprites.draw(self.display)
         pg.display.update()
 

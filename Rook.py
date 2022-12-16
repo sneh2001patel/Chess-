@@ -31,7 +31,7 @@ class Rook(pg.sprite.Sprite):
             self.game.white_check = False
         else:
             self.game.black_check = False
-        self.rect.center = (self.x,self.y)
+        self.rect.center = (self.x, self.y)
 
     def valid_moves(self, impossible=[], king_check=False, checkMoves=[], numChecks=0):
         moves = []
@@ -46,7 +46,7 @@ class Rook(pg.sprite.Sprite):
         i = 1
         while True:
             if (self.pos[1] - i >= 0) and (self.game.board[self.pos[1] - i][self.pos[0]] == ""):
-                if not self.kill_check([self.pos[0], self.pos[1] - i], checkMoves, numChecks):
+                if not self.move_check([self.pos[0], self.pos[1] - i], checkMoves, numChecks):
                     moves.append([self.pos[0], self.pos[1] - i])
                 else:
                     break
@@ -67,7 +67,7 @@ class Rook(pg.sprite.Sprite):
         j = 1
         while True:
             if (self.pos[1] + j <= 7) and (self.game.board[self.pos[1] + j][self.pos[0]] == ""):
-                if not self.kill_check([self.pos[0], self.pos[1] + j], checkMoves, numChecks):
+                if not self.move_check([self.pos[0], self.pos[1] + j], checkMoves, numChecks):
                     moves.append([self.pos[0], self.pos[1] + j])
                 else:
                     break
@@ -87,7 +87,7 @@ class Rook(pg.sprite.Sprite):
         k = 1
         while True:
             if (self.pos[0] - k >= 0) and (self.game.board[self.pos[1]][self.pos[0] - k] == ""):
-                if not self.kill_check([self.pos[0] - k, self.pos[1]], checkMoves, numChecks):
+                if not self.move_check([self.pos[0] - k, self.pos[1]], checkMoves, numChecks):
                     moves.append([self.pos[0] - k, self.pos[1]])
                 else:
                     break
@@ -107,7 +107,7 @@ class Rook(pg.sprite.Sprite):
         m = 1
         while True:
             if (self.pos[0] + m <= 7) and (self.game.board[self.pos[1]][self.pos[0] + m] == ""):
-                if not self.kill_check([self.pos[0] + m, self.pos[1]], checkMoves, numChecks):
+                if not self.move_check([self.pos[0] + m, self.pos[1]], checkMoves, numChecks):
                     moves.append([self.pos[0] + m, self.pos[1]])
                 else:
                     break
@@ -130,10 +130,10 @@ class Rook(pg.sprite.Sprite):
         elif numChecks > 1:
             moves = []
             kills = []
-
+        kills = self.kill_check(kills, checkMoves, numChecks)
         return {"moves": moves, "kills": kills}
 
-    def kill_check(self, move, check_spaces, num_checks):
+    def move_check(self, move, check_spaces, num_checks):
         b = self.game.board
         new_board = [sublst[:] for sublst in b]
         new_board[self.pos[1]][self.pos[0]] = ""
@@ -155,8 +155,36 @@ class Rook(pg.sprite.Sprite):
         k = self.game.get_king(a)
         return self.game.ischeck(k.pos, moves)
 
+    def kill_check(self, kills, check_spaces, num_checks):
+        b = self.game.board
+        aproved_kills = []
+        for kill in kills:
+            new_board = [sublst[:] for sublst in b]
+            new_board[self.pos[1]][self.pos[0]] = ""
+            new_board[kill[1]][kill[0]] = self.symbol
+            self.game.display_board(self.game.board)
+            self.game.display_board(new_board)
+            t = self.game.turn
+            inverse = self.game.opponent(t)
 
-    def all_position(self,  board, updated=[]):
+            moves = []
+            symbols = self.game.piece_on_board(new_board, inverse)
+            sprites = []
+            for i in symbols:
+                b = self.game.get_sprite(i, inverse)
+                sprites.append(b)
+            print(sprites)
+
+            for sprite in sprites:
+                print("Sprite: ", sprite)
+                pos = sprite.all_position(new_board)
+                moves += pos
+            k = self.game.get_king(t)
+            if not self.game.ischeck(k.pos, moves):
+                aproved_kills.append(kill)
+        return aproved_kills
+
+    def all_position(self, board, updated=[]):
         moves = []
         # Up directions
         i = 1

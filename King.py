@@ -36,7 +36,6 @@ class King(pg.sprite.Sprite):
             self.game.black_check = False
         self.rect.center = (self.x, self.y)
 
-
     def valid_moves(self, impossible=[], king_check=False, checkMoves=[], numChecks=0):
         moves = []
         kills = []
