@@ -53,43 +53,55 @@ class Pawn(pg.sprite.Sprite):
             if self.color == 0:
                 for i in range(1, 3):
                     if (self.pos[1] - i >= 0) and (self.game.board[self.pos[1] - i][self.pos[0]] == ""):
-                        moves.append([self.pos[0], self.pos[1] - i])
+                        if not self.kill_check([self.pos[0], self.pos[1] - i], checkMoves, numChecks):
+                            moves.append([self.pos[0], self.pos[1] - i])
+                        else:
+                            break
                     else:
                         break
             if self.color == 1:
                 for i in range(1, 3):
                     if (self.pos[1] + i <= 7) and (self.game.board[self.pos[1] + i][self.pos[0]] == ""):
-                        moves.append([self.pos[0], self.pos[1] + i])
+                        if not self.kill_check([self.pos[0], self.pos[1] + i], checkMoves, numChecks):
+                            moves.append([self.pos[0], self.pos[1] + i])
+                        else:
+                            break
                     else:
                         break
 
         else:
             if self.color == 0:
                 if (self.pos[1] - 1 >= 0) and (self.game.board[self.pos[1] - 1][self.pos[0]] == ""):
-                    moves.append([self.pos[0], self.pos[1] - 1])
+                    if not self.kill_check([self.pos[0], self.pos[1] - 1], checkMoves, numChecks):
+                        moves.append([self.pos[0], self.pos[1] - 1])
             if self.color == 1:
                 if (self.pos[1] + 1 <= 7) and (self.game.board[self.pos[1] + 1][self.pos[0]] == ""):
-                    moves.append([self.pos[0], self.pos[1] + 1])
+                    if not self.kill_check([self.pos[0], self.pos[1] + 1], checkMoves, numChecks):
+                        moves.append([self.pos[0], self.pos[1] + 1])
 
         # Kills
         if self.color == 0:  # white
             if (self.pos[1] - 1 >= 0) and (self.pos[0] + 1 <= 7):
                 if ("b" in self.game.board[self.pos[1] - 1][self.pos[0] + 1]):
-                    kills.append([self.pos[0] + 1, self.pos[1] - 1])
+                    if not self.kill_check([self.pos[0] + 1, self.pos[1] - 1], checkMoves, numChecks):
+                        kills.append([self.pos[0] + 1, self.pos[1] - 1])
             if (self.pos[1] - 1 >= 0) and (self.pos[0] - 1 >= 0):
                 if ("b" in self.game.board[self.pos[1] - 1][self.pos[0] - 1]):
-                    kills.append([self.pos[0] - 1, self.pos[1] - 1])
+                    if not self.kill_check([self.pos[0] - 1, self.pos[1] - 1], checkMoves, numChecks):
+                        kills.append([self.pos[0] - 1, self.pos[1] - 1])
 
         if self.color == 1:  # black
             if (self.pos[1] + 1 <= 7) and (self.pos[0] - 1 >= 0):
                 if ("b" not in self.game.board[self.pos[1] + 1][self.pos[0] - 1]) and (
                         self.game.board[self.pos[1] + 1][self.pos[0] - 1] != ""):
-                    kills.append([self.pos[0] - 1, self.pos[1] + 1])
+                    if not self.kill_check([self.pos[0] - 1, self.pos[1] + 1], checkMoves, numChecks):
+                        kills.append([self.pos[0] - 1, self.pos[1] + 1])
 
             if (self.pos[1] + 1 <= 7) and (self.pos[0] + 1 <= 7):
                 if ("b" not in self.game.board[self.pos[1] + 1][self.pos[0] + 1]) and (
                         self.game.board[self.pos[1] + 1][self.pos[0] + 1] != ""):
-                    kills.append([self.pos[0] + 1, self.pos[1] + 1])
+                    if not self.kill_check([self.pos[0] + 1, self.pos[1] + 1], checkMoves, numChecks):
+                        kills.append([self.pos[0] + 1, self.pos[1] + 1])
 
         if king_check and numChecks == 1:
             moves = [i for i in checkMoves if i in moves]
@@ -100,6 +112,27 @@ class Pawn(pg.sprite.Sprite):
 
         return {"moves": moves, "kills": kills}
 
+    def kill_check(self, move, check_spaces, num_checks):
+        b = self.game.board
+        new_board = [sublst[:] for sublst in b]
+        new_board[self.pos[1]][self.pos[0]] = ""
+        new_board[move[1]][move[0]] = self.symbol
+        print("NEW BORAD")
+        self.game.display_board(new_board)
+        a = self.game.turn
+        inverse = self.game.opponent(a)
+
+        sprites = self.game.white_sprites
+        if inverse == 1:
+            sprites = self.game.black_sprites
+
+        moves = []
+        for sprite in sprites:
+            pos = sprite.all_position(new_board)
+            moves += pos
+
+        k = self.game.get_king(a)
+        return self.game.ischeck(k.pos, moves)
     def all_position(self, board, updated=[]):
         moves = []
 

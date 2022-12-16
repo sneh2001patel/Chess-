@@ -1,5 +1,5 @@
 # Game Properties
-TILE = 100 # Change this to resize the window to fit the board 100 is recommended if need smaller try 80
+TILE = 100  # Change this to resize the window to fit the board 100 is recommended if need smaller try 80
 BOARDLEN = 8
 WIDTH = TILE * BOARDLEN
 HEIGHT = TILE * BOARDLEN
@@ -15,7 +15,8 @@ BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
 CYAN = (0, 255, 255)
 MAGENTA = (255, 0, 255)
-NAVY = (28,42,80)
+NAVY = (28, 42, 80)
+# POSCOLOR = (28, 42, 80)
 
 # Piece Path
 BKING = "pieces/black/BKing.png"
@@ -35,6 +36,3 @@ WKNIGHT = "pieces/white/WKnight.png"
 
 BPAWN = "pieces/black/BPawn.png"
 WPAWN = "pieces/white/WPawn.png"
-
-
-

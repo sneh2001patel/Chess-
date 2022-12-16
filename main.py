@@ -42,6 +42,7 @@ class Game:
         self.num_checks = 0
         self.check_spaces = []
         self.test = []
+        # self.test1 = []
 
     def load_data(self):
         self.board = []
@@ -757,10 +758,16 @@ class Game:
             pg.draw.rect(self.display, self.checkCol, (
                 TILE * king.pos[0] + TILE * 0.075, TILE * king.pos[1] + TILE * 0.075, TILE * 0.85, TILE * 0.85))
 
-        # for t in self.test:
+        for t in self.test:
+            pg.draw.rect(self.display, self.checkCol, (
+                TILE * t[0] + TILE * 0.075, TILE * t[1] + TILE * 0.075, TILE * 0.85, TILE * 0.85))
+        # print(self.test1)
+        # for t in self.test1:
         #     pg.draw.rect(self.display, self.checkCol, (
-        #         TILE * t[0] + TILE * 0.075, TILE * t[1] + TILE * 0.075, TILE * 0.85, TILE * 0.85))
-
+        #         TILE * self.test1[0][0] + TILE * 0.075, TILE * self.test1[0][1] + TILE * 0.075, TILE * 0.85, TILE * 0.85))
+        if self.current_piece != None and (self.moves or self.pos_kills):
+            pg.draw.rect(self.display, YELLOW, (
+                TILE * self.current_piece.pos[0] + TILE * 0.075, TILE * self.current_piece.pos[1] + TILE * 0.075, TILE * 0.85, TILE * 0.85))
         self.all_sprites.draw(self.display)
         pg.display.update()
 

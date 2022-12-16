@@ -158,7 +158,7 @@ class King(pg.sprite.Sprite):
                 pos = sprite.all_position(new_board)
                 moves += pos
 
-            self.game.test = moves
+            # self.game.test = moves
             print(self.game.ischeck(kill, moves))
             if not self.game.ischeck(kill, moves):
                 aproved_kills.append(kill)

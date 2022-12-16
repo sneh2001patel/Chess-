@@ -46,14 +46,17 @@ class Rook(pg.sprite.Sprite):
         i = 1
         while True:
             if (self.pos[1] - i >= 0) and (self.game.board[self.pos[1] - i][self.pos[0]] == ""):
-                moves.append([self.pos[0], self.pos[1] - i])
+                if not self.kill_check([self.pos[0], self.pos[1] - i], checkMoves, numChecks):
+                    moves.append([self.pos[0], self.pos[1] - i])
+                else:
+                    break
                 i += 1
             else:
                 break
-
         if self.pos[1] - i >= 0:
             if self.color == 0:
                 if "b" in self.game.board[self.pos[1] - i][self.pos[0]]:
+                    # print("asd")
                     kills.append([self.pos[0], self.pos[1] - i])
             if self.color == 1:
                 if ("b" not in self.game.board[self.pos[1] - i][self.pos[0]]) and (
@@ -64,7 +67,10 @@ class Rook(pg.sprite.Sprite):
         j = 1
         while True:
             if (self.pos[1] + j <= 7) and (self.game.board[self.pos[1] + j][self.pos[0]] == ""):
-                moves.append([self.pos[0], self.pos[1] + j])
+                if not self.kill_check([self.pos[0], self.pos[1] + j], checkMoves, numChecks):
+                    moves.append([self.pos[0], self.pos[1] + j])
+                else:
+                    break
                 j += 1
             else:
                 break
@@ -81,7 +87,10 @@ class Rook(pg.sprite.Sprite):
         k = 1
         while True:
             if (self.pos[0] - k >= 0) and (self.game.board[self.pos[1]][self.pos[0] - k] == ""):
-                moves.append([self.pos[0] - k, self.pos[1]])
+                if not self.kill_check([self.pos[0] - k, self.pos[1]], checkMoves, numChecks):
+                    moves.append([self.pos[0] - k, self.pos[1]])
+                else:
+                    break
                 k += 1
             else:
                 break
@@ -93,12 +102,15 @@ class Rook(pg.sprite.Sprite):
                 if ("b" not in self.game.board[self.pos[1]][self.pos[0] - k]) and (
                         self.game.board[self.pos[1]][self.pos[0] - k] != ""):
                     kills.append([self.pos[0] - k, self.pos[1]])
+
         # # Right Direction
         m = 1
         while True:
             if (self.pos[0] + m <= 7) and (self.game.board[self.pos[1]][self.pos[0] + m] == ""):
-                # print("Ads")
-                moves.append([self.pos[0] + m, self.pos[1]])
+                if not self.kill_check([self.pos[0] + m, self.pos[1]], checkMoves, numChecks):
+                    moves.append([self.pos[0] + m, self.pos[1]])
+                else:
+                    break
                 m += 1
             else:
                 break
@@ -106,6 +118,7 @@ class Rook(pg.sprite.Sprite):
             if self.color == 0:
                 if "b" in self.game.board[self.pos[1]][self.pos[0] + m]:
                     kills.append([self.pos[0] + m, self.pos[1]])
+
             if self.color == 1:
                 if ("b" not in self.game.board[self.pos[1]][self.pos[0] + m]) and (
                         self.game.board[self.pos[1]][self.pos[0] + m] != ""):
@@ -119,6 +132,29 @@ class Rook(pg.sprite.Sprite):
             kills = []
 
         return {"moves": moves, "kills": kills}
+
+    def kill_check(self, move, check_spaces, num_checks):
+        b = self.game.board
+        new_board = [sublst[:] for sublst in b]
+        new_board[self.pos[1]][self.pos[0]] = ""
+        new_board[move[1]][move[0]] = self.symbol
+        print("NEW BORAD")
+        self.game.display_board(new_board)
+        a = self.game.turn
+        inverse = self.game.opponent(a)
+
+        sprites = self.game.white_sprites
+        if inverse == 1:
+            sprites = self.game.black_sprites
+
+        moves = []
+        for sprite in sprites:
+            pos = sprite.all_position(new_board)
+            moves += pos
+
+        k = self.game.get_king(a)
+        return self.game.ischeck(k.pos, moves)
+
 
     def all_position(self,  board, updated=[]):
         moves = []
