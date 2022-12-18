@@ -41,8 +41,9 @@ class Game:
         self.checkCol = MAGENTA
         self.num_checks = 0
         self.check_spaces = []
-        self.test = []
-        self.test1 = []
+        self.playAgainst = "Human"
+        # self.test = []
+        # self.test1 = []
 
     def load_data(self):
         self.board = []
@@ -92,7 +93,7 @@ class Game:
         self.white_sprites = pg.sprite.Group()
         self.black_sprites = pg.sprite.Group()
 
-        self.display_board(self.board)
+        # self.display_board(self.board)
 
         for i in range(len(self.board)):
             for j in range(len(self.board[i])):
@@ -168,90 +169,107 @@ class Game:
         # self.all_sprites.add(self.queen_sprites)
         self.all_sprites.add(self.white_sprites)
         self.all_sprites.add(self.black_sprites)
-        self.impossible = self.get_all_moves(self.opponent(self.turn))
+        self.impossible = self.get_all_moves(self.opponent(self.turn), self.board)
         king = self.get_king(self.turn)
         self.do_check(king, self.impossible)
 
-        print(self.black_check)
-        print(self.white_check)
+        self.playAgainst = self.playAgainstWho()
+
         self.run()
+
+    def playAgainstWho(self):
+        s_out = "Who would you like to play against Human or AI (H, A): "
+        while True:
+            s = input(s_out)
+            s = s.upper()
+            if s == "A" or "H":
+                return s
+            else:
+                s_out = "Invalid Input please give a proper input (H, A): "
 
     def ischeck(self, element, list):
         if element in list:
             return True
         return False
 
+    def checks(self, arr, board, king):
+        num_checks = 0
+        check_spaces = []
+        for i in arr:
+            diff = (i[0] - king.pos[0], i[1] - king.pos[1])
+            if diff == (-1, 0):
+                # print("left")
+                dirr = self.direction(board, king.pos[1], king.pos[0], "left", king.color)
+                if dirr:
+                    num_checks += 1
+                check_spaces += dirr
+            if diff == (1, 0):
+                # print("right")
+                dirr = self.direction(board, king.pos[1], king.pos[0], "right", king.color)
+                if dirr:
+                    num_checks += 1
+                check_spaces += dirr
+            if diff == (0, 1):
+                # print("down")
+                dirr = self.direction(board, king.pos[1], king.pos[0], "down", king.color)
+                if dirr:
+                    num_checks += 1
+                check_spaces += dirr
+            if diff == (0, -1):
+                # print("up")
+                dirr = self.direction(board, king.pos[1], king.pos[0], "up", king.color)
+                if dirr:
+                    num_checks += 1
+                check_spaces += dirr
+            if diff == (1, 1):
+                # print("down-right")
+                dirr = self.direction(board, king.pos[1], king.pos[0], "down-right", king.color)
+                if dirr:
+                    num_checks += 1
+                check_spaces += dirr
+            if diff == (-1, -1):
+                # print("up-left")
+                dirr = self.direction(board, king.pos[1], king.pos[0], "up-left", king.color)
+                if dirr:
+                    num_checks += 1
+                check_spaces += dirr
+            if diff == (-1, 1):
+                # print("down-left")
+                dirr = self.direction(board, king.pos[1], king.pos[0], "down-left", king.color)
+                if dirr:
+                    num_checks += 1
+                check_spaces += dirr
+            if diff == (1, -1):
+                # print("up-right")
+                dirr = self.direction(board, king.pos[1], king.pos[0], "up-right", king.color)
+                if dirr:
+                    num_checks += 1
+                check_spaces += dirr
+
+        return {"num_checks": num_checks, "check_spaces": check_spaces}
+
     def do_check(self, king, impossible_list):
         kcol = self.white_check
         if self.ischeck(king.pos, impossible_list):
             if king.color == 0:
                 self.white_check = True
+                self.black_score += CHECK_SCORE
+
             else:
                 self.black_check = True
                 kcol = self.black_check
+                self.white_score += CHECK_SCORE
             # king_check = self.white_check
             # if piece[0].color == 1:
             #     king_check = self.black_check
 
-            moves = king.valid_moves(impossible_list, kcol, self.check_spaces, self.num_checks)
+            moves = king.valid_moves(impossible_list, kcol)
             all_moves = king.all_position(self.board)
             arr = [i for i in all_moves if i not in moves["moves"]]
-            pos = king.pos
-            # check_spaces = []
-            self.num_checks = 0
-            for i in arr:
-                diff = (i[0] - pos[0], i[1] - pos[1])
-                if diff == (-1, 0):
-                    print("left")
-                    dirr = self.direction(self.board, pos[1], pos[0], "left", king.color)
-                    if dirr:
-                        self.num_checks += 1
-                    self.check_spaces += dirr
-                if diff == (1, 0):
-                    print("right")
-                    dirr = self.direction(self.board, pos[1], pos[0], "right", king.color)
-                    if dirr:
-                        self.num_checks += 1
-                    self.check_spaces += dirr
-                if diff == (0, 1):
-                    print("down")
-                    dirr = self.direction(self.board, pos[1], pos[0], "down", king.color)
-                    if dirr:
-                        self.num_checks += 1
-                    self.check_spaces += dirr
-                if diff == (0, -1):
-                    print("up")
-                    dirr = self.direction(self.board, pos[1], pos[0], "up", king.color)
-                    if dirr:
-                        self.num_checks += 1
-                    self.check_spaces += dirr
-                if diff == (1, 1):
-                    print("down-right")
-                    dirr = self.direction(self.board, pos[1], pos[0], "down-right", king.color)
-                    if dirr:
-                        self.num_checks += 1
-                    self.check_spaces += dirr
-                if diff == (-1, -1):
-                    print("up-left")
-                    dirr = self.direction(self.board, pos[1], pos[0], "up-left", king.color)
-                    if dirr:
-                        self.num_checks += 1
-                    self.check_spaces += dirr
-                if diff == (-1, 1):
-                    print("down-left")
-                    dirr = self.direction(self.board, pos[1], pos[0], "down-left", king.color)
-                    if dirr:
-                        self.num_checks += 1
-                    self.check_spaces += dirr
-                if diff == (1, -1):
-                    print("up-right")
-                    dirr = self.direction(self.board, pos[1], pos[0], "up-right", king.color)
-                    if dirr:
-                        self.num_checks += 1
-                    self.check_spaces += dirr
+            checks = self.checks(arr, self.board, king)
+            self.check_spaces = checks["check_spaces"]
+            self.num_checks = checks["num_checks"]
 
-            print("Number of checks: ", self.num_checks)
-            print("Check: ", self.check_spaces)
             canBlock = False
             if self.num_checks == 1:
                 canBlock = self.block_exists(self.check_spaces)
@@ -260,23 +278,46 @@ class Game:
                 if king.color == 0:
                     print("Black Won!")
                     self.white_checkMate = True
+                    self.black_score += CHECKMATE_SCORE
                     self.checkCol = BLUE
                     # self.running = False
                 else:
                     print("White Won!")
                     self.black_checkMate = True
+                    self.white_score += CHECKMATE_SCORE
                     self.checkCol = BLUE
                     # self.running = False
-        # self.num_checks = 0
-        # self.white_check = False
-        # self.black_check = False
-        print("White King Check: ", self.white_check)
-        print("Black King Check: ", self.black_check)
+
+    def check_winner(self, board, player):
+        for king in self.king_sprites:
+            # if king is white get all moves from all black pieces
+            impossible_list = self.get_all_moves(self.opponent(king.color), board)
+            if self.ischeck(king.pos, impossible_list):  # check if the any black pieces can kill the king
+                moves = king.valid_moves(impossible_list, king_check=True)
+                all_moves = king.all_position(self.board)
+                arr = [i for i in all_moves if i not in moves["moves"]]  # get where the check is coming from direction
+                pos = king.pos
+                checks = self.checks(arr, self.board, king)  # number of checks and its spaces inbetween
+
+                check_spaces = checks["check_spaces"]
+                num_checks = checks["num_checks"]
+
+                # Check if any other piece other than the king can block the checks path
+                canBlock = False
+                if num_checks == 1:  # can only happen if only one piece is checking it
+                    canBlock = self.block_exists(check_spaces)
+
+                # if pieces cannot block free the king and king cannot move or kill the enemy its checkmate
+                if not canBlock and len(moves["moves"]) == 0 and len(moves["kills"]) == 0:
+                    if king.color == player:
+                        return "WIN"
+                    else:
+                        return "LOSE"
 
     def block_exists(self, check_moves):
-        pieces_moves = self.get_all_moves(self.turn, False)
-        print(pieces_moves)
-        print(check_moves)
+        pieces_moves = self.get_all_moves(self.turn, self.board, False)
+        # print(pieces_moves)
+        # print(check_moves)
 
         for i in check_moves:
             if i in pieces_moves:
@@ -300,7 +341,7 @@ class Game:
                             break
                         movs.append([j, i + k])
                         p = self.find_piece([j, i + k])
-                        arr = p.all_position(self.board)
+                        arr = p.all_position(board)
                         a = p.pos
                         arr.append([a[0], a[1]])
                         if not self.isubset(arr, movs):
@@ -326,7 +367,7 @@ class Game:
                             break
                         movs.append([j, i - k])
                         p = self.find_piece([j, i - k])
-                        arr = p.all_position(self.board)
+                        arr = p.all_position(board)
                         a = p.pos
                         arr.append([a[0], a[1]])
                         if not self.isubset(arr, movs):
@@ -352,7 +393,7 @@ class Game:
                             break
                         movs.append([j - k, i])
                         p = self.find_piece([j - k, i])
-                        arr = p.all_position(self.board)
+                        arr = p.all_position(board)
                         a = p.pos
                         arr.append([a[0], a[1]])
                         if not self.isubset(arr, movs):
@@ -379,7 +420,7 @@ class Game:
 
                         movs.append([j + k, i])
                         p = self.find_piece([j + k, i])
-                        arr = p.all_position(self.board)
+                        arr = p.all_position(board)
                         a = p.pos
                         arr.append([a[0], a[1]])
                         if not self.isubset(arr, movs):
@@ -405,7 +446,7 @@ class Game:
                             break
                         movs.append([j + k, i + k])
                         p = self.find_piece([j + k, i + k])
-                        arr = p.all_position(self.board)
+                        arr = p.all_position(board)
                         a = p.pos
                         arr.append([a[0], a[1]])
                         if not self.isubset(arr, movs):
@@ -431,7 +472,7 @@ class Game:
                             break
                         movs.append([j - k, i - k])
                         p = self.find_piece([j - k, i - k])
-                        arr = p.all_position(self.board)
+                        arr = p.all_position(board)
                         a = p.pos
                         arr.append([a[0], a[1]])
                         if not self.isubset(arr, movs):
@@ -458,7 +499,7 @@ class Game:
                             break
                         movs.append([j - k, i + k])
                         p = self.find_piece([j - k, i + k])
-                        arr = p.all_position(self.board)
+                        arr = p.all_position(board)
                         a = p.pos
                         arr.append([a[0], a[1]])
                         if not self.isubset(arr, movs):
@@ -484,7 +525,7 @@ class Game:
                             break
                         movs.append([j + k, i - k])
                         p = self.find_piece([j + k, i - k])
-                        arr = p.all_position(self.board)
+                        arr = p.all_position(board)
                         a = p.pos
                         arr.append([a[0], a[1]])
                         if not self.isubset(arr, movs):
@@ -530,6 +571,7 @@ class Game:
                 return sprite
 
     def find_piece(self, pos):
+
         for sprite in self.all_sprites:
             if sprite.pos == pos:
                 return sprite
@@ -539,7 +581,7 @@ class Game:
             if king.color is color:
                 return king
 
-    def get_all_moves(self, color, forK=True):
+    def get_all_moves(self, color, board, forK=True):
         moves = []
         sprites = self.white_sprites
         if color == 1:
@@ -547,7 +589,7 @@ class Game:
 
         for sprite in sprites:
             if forK:
-                pos = sprite.all_position(self.board)
+                pos = sprite.all_position(board)
                 moves += pos
             else:
                 pos = sprite.valid_moves(self.impossible, sprite.color, self.check_spaces, self.num_checks)
@@ -568,184 +610,195 @@ class Game:
             if event.type == pg.QUIT:
                 if self.running:
                     self.running = False
-            if self.white_checkMate == False and self.black_checkMate ==  False:
-                if self.turn == 0:
-                    if event.type == pg.MOUSEBUTTONDOWN:
-                        pos = pg.mouse.get_pos()
-                        piece = [s for s in self.all_sprites if s.rect.collidepoint(pos)]
-                        if len(piece) > 0:
-                            if piece[0].color == self.turn:
-
-                                king_check = self.white_check
-                                if piece[0].color == 1:
-                                    king_check = self.black_check
-
-                                all_moves = piece[0].valid_moves(self.impossible, king_check, self.check_spaces,
-                                                                 self.num_checks)
-                                self.current_piece = piece[0]
-                                if self.moves != all_moves["moves"]:
-                                    self.moves = all_moves["moves"]
-                                    self.rect_moves = []
-                                    for move in self.moves:
-                                        self.rect_moves.append(
-                                            pg.Rect(TILE * move[0] + TILE * 0.075, TILE * move[1] + TILE * 0.075, TILE * 0.85,
-                                                    TILE * 0.85))
-                                    print(self.moves)
-                                else:
-                                    self.rect_moves = []
-                                    self.moves = []
-
-                                if self.pos_kills != all_moves["kills"]:
-                                    self.pos_kills = all_moves["kills"]
-                                    self.rect_kills = []
-                                    for kill in self.pos_kills:
-                                        self.rect_kills.append(
-                                            pg.Rect(TILE * kill[0] + TILE * 0.075, TILE * kill[1] + TILE * 0.075, TILE * 0.85,
-                                                    TILE * 0.85))
-                                    print(self.pos_kills)
-                                else:
-                                    self.pos_kills = []
-                                    self.rect_kills = []
-
-                    if event.type == pg.MOUSEBUTTONDOWN:
-                        mouse_pos = pg.mouse.get_pos()  # get the mouse pos
-                        # print(mouse_pos)
-                        for i in range(len(self.rect_moves)):
-                            if self.rect_moves[i].collidepoint(mouse_pos):  # checking if the mouse_pos is inside the rectangle
-                                j = self.moves[i][0]
-                                k = self.moves[i][1]
-                                self.current_piece.handle_movement(TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5))
-                                self.turn = self.opponent(self.turn)
-                                new_pos = [j, k]
-                                self.update_board(self.current_piece.pos, new_pos, self.current_piece.symbol)
-                                self.current_piece.pos = new_pos
-                                if type(self.current_piece) == Pawn:
-                                    if self.current_piece.pos[1] == 0 and self.current_piece.color == 0:
-                                        p = self.current_piece.choose_piece()
-                                        piece = None
-                                        sym = p
-                                        if p == "Q":
-                                            piece = Queen(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
-                                                          self.current_piece.color, new_pos, sym)
-                                        elif p == "H":
-                                            piece = Knight(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
-                                                           self.current_piece.color, new_pos, sym)
-                                        elif p == "B":
-                                            piece = Bishop(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
-                                                           self.current_piece.color, new_pos, sym)
-                                        elif p == "R":
-                                            piece = Rook(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
-                                                         self.current_piece.color, new_pos, sym)
-
-                                        self.all_sprites.add(piece)
-                                        self.white_sprites.add(piece)
-                                        self.current_piece.kill()
-                                        self.board[k][j] = sym
-                                    if self.current_piece.pos[1] == 7 and self.current_piece.color == 1:
-                                        p = self.current_piece.choose_piece()
-                                        piece = None
-                                        sym = p
-                                        sym = "b" + sym
-                                        if p == "Q":
-                                            piece = Queen(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
-                                                          self.current_piece.color, new_pos, sym)
-                                        elif p == "H":
-                                            piece = Knight(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
-                                                           self.current_piece.color, new_pos, sym)
-                                        elif p == "B":
-                                            piece = Bishop(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
-                                                           self.current_piece.color, new_pos, sym)
-                                        elif p == "R":
-                                            piece = Rook(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
-                                                         self.current_piece.color, new_pos, sym)
-
-                                        self.all_sprites.add(piece)
-                                        self.black_sprites.add(piece)
-                                        self.current_piece.kill()
-                                        self.board[k][j] = sym
-
-                                self.impossible = self.get_all_moves(self.opponent(self.turn))
-                                king = self.get_king(self.turn)
-                                self.do_check(king, self.impossible)
-                                # print(self.opponent(self.turn), self.white_moves, self.black_moves)
-                                self.moves = []
-                                self.rect_moves = []
-                                self.pos_kills = []
-                                self.rect_kills = []
-                                break
-
-                        for i in range(len(self.rect_kills)):
-                            if self.rect_kills[i].collidepoint(mouse_pos):
-                                # print(self.current_piece)
-                                # print("Hello world")
-                                pos = pg.mouse.get_pos()
-                                piece = [s for s in self.all_sprites if s.rect.collidepoint(pos)]
-                                print(self.current_piece)
-                                piece[0].kill()
-                                j = self.pos_kills[i][0]
-                                k = self.pos_kills[i][1]
-                                self.current_piece.handle_movement(TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5))
-                                self.turn = self.opponent(self.turn)
-                                new_pos = [j, k]
-                                self.update_board(self.current_piece.pos, new_pos, self.current_piece.symbol)
-                                self.current_piece.pos = new_pos
-
-                                if type(self.current_piece) == Pawn:
-                                    if self.current_piece.pos[1] == 0 and self.current_piece.color == 0:
-                                        p = self.current_piece.choose_piece()
-                                        piece = None
-                                        sym = p
-                                        if p == "Q":
-                                            piece = Queen(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
-                                                          self.current_piece.color, new_pos, sym)
-                                        elif p == "H":
-                                            piece = Knight(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
-                                                           self.current_piece.color, new_pos, sym)
-                                        elif p == "B":
-                                            piece = Bishop(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
-                                                           self.current_piece.color, new_pos, sym)
-                                        elif p == "R":
-                                            piece = Rook(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
-                                                         self.current_piece.color, new_pos, sym)
-
-                                        self.all_sprites.add(piece)
-                                        self.white_sprites.add(piece)
-                                        self.current_piece.kill()
-                                        self.board[k][j] = sym
-                                    if self.current_piece.pos[1] == 7 and self.current_piece.color == 1:
-                                        p = self.current_piece.choose_piece()
-                                        piece = None
-                                        sym = p
-                                        sym = "b" + sym
-                                        if p == "Q":
-                                            piece = Queen(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
-                                                          self.current_piece.color, new_pos, sym)
-                                        elif p == "H":
-                                            piece = Knight(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
-                                                           self.current_piece.color, new_pos, sym)
-                                        elif p == "B":
-                                            piece = Bishop(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
-                                                           self.current_piece.color, new_pos, sym)
-                                        elif p == "R":
-                                            piece = Rook(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
-                                                         self.current_piece.color, new_pos, sym)
-
-                                        self.all_sprites.add(piece)
-                                        self.black_sprites.add(piece)
-                                        self.current_piece.kill()
-                                        self.board[k][j] = sym
-
-                                self.impossible = self.get_all_moves(self.opponent(self.turn))
-                                king = self.get_king(self.turn)
-                                self.do_check(king, self.impossible)
-
-                                self.moves = []
-                                self.rect_moves = []
-                                self.pos_kills = []
-                                self.rect_kills = []
-                                break
+            if self.white_checkMate == False and self.black_checkMate == False:
+                if self.playAgainst == "H":
+                    self.guicontrol(event)
                 else:
-                    self.move()
+                    if self.turn == 0:
+                        self.guicontrol(event)
+                    else:
+                        self.move()
+
+    def guicontrol(self, event):
+        if event.type == pg.MOUSEBUTTONDOWN:
+            pos = pg.mouse.get_pos()
+            piece = [s for s in self.all_sprites if s.rect.collidepoint(pos)]
+            if len(piece) > 0:
+                if piece[0].color == self.turn:
+
+                    king_check = self.white_check
+                    if piece[0].color == 1:
+                        king_check = self.black_check
+
+                    all_moves = piece[0].valid_moves(self.impossible, king_check, self.check_spaces,
+                                                     self.num_checks)
+                    self.current_piece = piece[0]
+                    if self.moves != all_moves["moves"]:
+                        self.moves = all_moves["moves"]
+                        self.rect_moves = []
+                        for move in self.moves:
+                            self.rect_moves.append(
+                                pg.Rect(TILE * move[0] + TILE * 0.075, TILE * move[1] + TILE * 0.075, TILE * 0.85,
+                                        TILE * 0.85))
+                        # print(self.moves)
+                    else:
+                        self.rect_moves = []
+                        self.moves = []
+
+                    if self.pos_kills != all_moves["kills"]:
+                        self.pos_kills = all_moves["kills"]
+                        self.rect_kills = []
+                        for kill in self.pos_kills:
+                            self.rect_kills.append(
+                                pg.Rect(TILE * kill[0] + TILE * 0.075, TILE * kill[1] + TILE * 0.075, TILE * 0.85,
+                                        TILE * 0.85))
+                        # print(self.pos_kills)
+                    else:
+                        self.pos_kills = []
+                        self.rect_kills = []
+        if event.type == pg.MOUSEBUTTONDOWN:
+            mouse_pos = pg.mouse.get_pos()  # get the mouse pos
+            # print(mouse_pos)
+            for i in range(len(self.rect_moves)):
+                if self.rect_moves[i].collidepoint(mouse_pos):  # checking if the mouse_pos is inside the rectangle
+                    j = self.moves[i][0]
+                    k = self.moves[i][1]
+                    self.current_piece.handle_movement(TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5))
+                    self.turn = self.opponent(self.turn)
+                    new_pos = [j, k]
+                    # (self, board, current_piece, new_pos)
+                    self.update_board(self.board, self.current_piece, new_pos)
+                    self.current_piece.pos = new_pos
+                    if type(self.current_piece) == Pawn:
+                        if self.current_piece.pos[1] == 0 and self.current_piece.color == 0:
+                            p = self.current_piece.choose_piece()
+                            piece = None
+                            sym = p
+                            if p == "Q":
+                                piece = Queen(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                              self.current_piece.color, new_pos, sym)
+                            elif p == "H":
+                                piece = Knight(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                               self.current_piece.color, new_pos, sym)
+                            elif p == "B":
+                                piece = Bishop(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                               self.current_piece.color, new_pos, sym)
+                            elif p == "R":
+                                piece = Rook(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                             self.current_piece.color, new_pos, sym)
+
+                            self.all_sprites.add(piece)
+                            self.white_sprites.add(piece)
+                            self.current_piece.kill()
+                            self.board[k][j] = sym
+                        if self.current_piece.pos[1] == 7 and self.current_piece.color == 1:
+                            p = self.current_piece.choose_piece()
+                            piece = None
+                            sym = p
+                            sym = "b" + sym
+                            if p == "Q":
+                                piece = Queen(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                              self.current_piece.color, new_pos, sym)
+                            elif p == "H":
+                                piece = Knight(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                               self.current_piece.color, new_pos, sym)
+                            elif p == "B":
+                                piece = Bishop(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                               self.current_piece.color, new_pos, sym)
+                            elif p == "R":
+                                piece = Rook(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                             self.current_piece.color, new_pos, sym)
+
+                            self.all_sprites.add(piece)
+                            self.black_sprites.add(piece)
+                            self.current_piece.kill()
+                            self.board[k][j] = sym
+                    self.impossible = self.get_all_moves(self.opponent(self.turn), self.board)
+                    king = self.get_king(self.turn)
+                    self.do_check(king, self.impossible)
+                    # print(self.opponent(self.turn), self.white_moves, self.black_moves)
+                    self.moves = []
+                    self.rect_moves = []
+                    self.pos_kills = []
+                    self.rect_kills = []
+                    break
+
+            for i in range(len(self.rect_kills)):
+                if self.rect_kills[i].collidepoint(mouse_pos):
+                    # print(self.current_piece)
+                    # print("Hello world")
+                    pos = pg.mouse.get_pos()
+                    piece = [s for s in self.all_sprites if s.rect.collidepoint(pos)]
+                    # print(self.current_piece)
+                    piece[0].kill()
+                    if piece[0].color == 0:
+                        self.white_score += piece[0].score
+                    else:
+                        self.black_score += piece[0].score
+
+                    j = self.pos_kills[i][0]
+                    k = self.pos_kills[i][1]
+                    self.current_piece.handle_movement(TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5))
+                    self.turn = self.opponent(self.turn)
+                    new_pos = [j, k]
+                    self.update_board(self.board, self.current_piece, new_pos)
+                    # self.update_board(self.current_piece.pos, new_pos, self.current_piece.symbol)
+                    self.current_piece.pos = new_pos
+
+                    if type(self.current_piece) == Pawn:
+                        if self.current_piece.pos[1] == 0 and self.current_piece.color == 0:
+                            p = self.current_piece.choose_piece()
+                            piece = None
+                            sym = p
+                            if p == "Q":
+                                piece = Queen(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                              self.current_piece.color, new_pos, sym)
+                            elif p == "H":
+                                piece = Knight(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                               self.current_piece.color, new_pos, sym)
+                            elif p == "B":
+                                piece = Bishop(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                               self.current_piece.color, new_pos, sym)
+                            elif p == "R":
+                                piece = Rook(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                             self.current_piece.color, new_pos, sym)
+
+                            self.all_sprites.add(piece)
+                            self.white_sprites.add(piece)
+                            self.current_piece.kill()
+                            self.board[k][j] = sym
+                        if self.current_piece.pos[1] == 7 and self.current_piece.color == 1:
+                            p = self.current_piece.choose_piece()
+                            piece = None
+                            sym = p
+                            sym = "b" + sym
+                            if p == "Q":
+                                piece = Queen(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                              self.current_piece.color, new_pos, sym)
+                            elif p == "H":
+                                piece = Knight(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                               self.current_piece.color, new_pos, sym)
+                            elif p == "B":
+                                piece = Bishop(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                               self.current_piece.color, new_pos, sym)
+                            elif p == "R":
+                                piece = Rook(self, TILE * j + (TILE * 0.5), TILE * k + (TILE * 0.5),
+                                             self.current_piece.color, new_pos, sym)
+
+                            self.all_sprites.add(piece)
+                            self.black_sprites.add(piece)
+                            self.current_piece.kill()
+                            self.board[k][j] = sym
+
+                    self.impossible = self.get_all_moves(self.opponent(self.turn), self.board)
+                    king = self.get_king(self.turn)
+                    self.do_check(king, self.impossible)
+
+                    self.moves = []
+                    self.rect_moves = []
+                    self.pos_kills = []
+                    self.rect_kills = []
+                    break
 
     def move(self):
         allMoves = []
@@ -758,16 +811,16 @@ class Game:
                 allMoves.append([i, "kill", bsprite])
         # print(allMoves)
         if allMoves and self.black_checkMate == False:
-            aimove = random.choice(allMoves)
+            aimove = self.bestMove(allMoves)
             # aimove = allMoves[-1]
             pos = aimove[0]
             typeM = aimove[1]
             piece = aimove[-1]
             if typeM == "move":
                 piece.handle_movement(TILE * pos[0] + (TILE * 0.5), TILE * pos[1] + (TILE * 0.5))
-                self.update_board(piece.pos, pos, piece.symbol)
+                # self.update_board(piece.pos, pos, piece.symbol)
+                self.update_board(self.board, piece, pos)
                 piece.pos = pos
-                print(pos[1])
                 if type(piece) == Pawn:
                     if pos[1] == 7:
                         p = piece.choose_piece(ai=True)
@@ -796,9 +849,9 @@ class Game:
                 enemey = self.find_piece(pos)
                 enemey.kill()
                 piece.handle_movement(TILE * pos[0] + (TILE * 0.5), TILE * pos[1] + (TILE * 0.5))
-                self.update_board(piece.pos, pos, piece.symbol)
+                self.update_board(self.board, piece, pos)
+                # self.update_board(piece.pos, pos, piece.symbol)
                 piece.pos = pos
-                print(pos[1])
                 if type(piece) == Pawn:
                     if pos[1] == 7:
                         p = piece.choose_piece(ai=True)
@@ -824,17 +877,138 @@ class Game:
                         piece.kill()
                         self.board[pos[1]][pos[0]] = sym
         self.turn = self.opponent(self.turn)
-        self.impossible = self.get_all_moves(self.opponent(self.turn))
-        print(self.impossible)
+        self.impossible = self.get_all_moves(self.opponent(self.turn), self.board)
+        # print(self.impossible)
 
         king = self.get_king(self.turn)
         self.do_check(king, self.impossible)
-        print("Moves: ", allMoves)
+        # print("Moves: ", allMoves)
 
-    def update_board(self, current_pos, new_pos, symbol):
-        self.board[current_pos[1]][current_pos[0]] = ""
-        self.board[new_pos[1]][new_pos[0]] = symbol
-        self.display_board(self.board)
+    def bestMove(self, moves):
+        b = self.board
+        best_score = float('inf')
+        bstmove = None
+        for move in moves:
+            pos = move[0]
+            piece = move[-1]
+            new_board = [sublst[:] for sublst in b]
+            self.update_board(new_board, piece, pos)
+            old_pos = piece.pos
+            new_pos = [pos[0], pos[1]]
+            piece.pos = new_pos
+            score = self.minimax(new_board, 2, ALPHA, BETA, False)
+            piece.pos = old_pos
+            if score < best_score:
+                best_score = score
+                bstmove = move
+
+        return bstmove
+
+    def heurstic(self, player, board):
+        player_sum = 0
+        enemy_sum = 0
+
+        if player:  # maximizing, white
+            for row in board:
+                for piece in row:
+                    if piece != "":
+                        if "b" in piece:
+                            piece = list(piece)[-1]
+                            enemy_sum += PIECES_SCORE[piece]
+                        else:
+                            player_sum += PIECES_SCORE[piece]
+
+        if not player:  # minimize, black
+            for row in board:
+                for piece in row:
+                    if piece != "":
+                        if "b" in piece:
+                            piece = list(piece)[-1]
+                            player_sum += PIECES_SCORE[piece]
+                        else:
+                            enemy_sum += PIECES_SCORE[piece]
+
+        enemy_sum = enemy_sum * -1
+
+        return player_sum + enemy_sum
+
+    def minimax(self, board, depth, alpha, beta, maximizingPlayer):
+        a = 0 if maximizingPlayer else 1
+        winner = self.check_winner(board, a)
+        if winner is not None:
+            return CHECKMATE_SCORE[str(winner)]
+        elif depth == 0:
+            return self.heurstic(maximizingPlayer, board)
+
+        else:
+            if maximizingPlayer:
+                best_score = float('-inf')
+                allMoves = []
+                for bsprite in self.white_sprites:
+                    impossible = self.get_all_moves(self.opponent(0), self.board)
+                    king = self.get_king(0)
+                    check = self.ischeck(king.pos, impossible)
+                    moves = king.valid_moves(impossible, 0)
+                    all_moves = king.all_position(self.board)
+                    arr = [i for i in all_moves if i not in moves["moves"]]
+                    checks = self.checks(arr, board, king)
+                    positions = bsprite.valid_moves(impossible, check, checks["check_spaces"], checks["num_checks"])
+                    for i in positions["moves"]:
+                        allMoves.append([i, "move", bsprite])
+                    for i in positions["kills"]:
+                        allMoves.append([i, "kill", bsprite])
+                for move in allMoves:
+                    pos = move[0]
+                    piece = move[-1]
+                    new_board = [sublst[:] for sublst in board]
+                    self.update_board(new_board, piece, pos)
+                    old_pos = piece.pos
+                    new_pos = [pos[0], pos[1]]
+                    piece.pos = new_pos
+                    score = self.minimax(new_board, depth - 1, alpha, beta, not maximizingPlayer)
+                    piece.pos = old_pos
+                    best_score = max(score, best_score)
+                    alpha = max(alpha, best_score)
+                    if beta <= alpha:
+                        break
+                return best_score
+            else:
+                best_score = float('inf')
+                allMoves = []
+                for bsprite in self.black_sprites:
+                    impossible = self.get_all_moves(self.opponent(1), self.board)
+                    king = self.get_king(1)
+                    check = self.ischeck(king.pos, impossible)
+                    moves = king.valid_moves(impossible, 1)
+                    all_moves = king.all_position(self.board)
+                    arr = [i for i in all_moves if i not in moves["moves"]]
+                    checks = self.checks(arr, board, king)
+                    positions = bsprite.valid_moves(impossible, check, checks["check_spaces"], checks["num_checks"])
+                    # allMoves[bsprite] = {"Moves": arr["movees"], "Kills": arr["kills"]
+                    for i in positions["moves"]:
+                        allMoves.append([i, "move", bsprite])
+                    for i in positions["kills"]:
+                        allMoves.append([i, "kill", bsprite])
+                for move in allMoves:
+                    pos = move[0]
+                    piece = move[-1]
+                    new_board = [sublst[:] for sublst in board]
+                    self.update_board(new_board, piece, pos)
+                    old_pos = piece.pos
+                    new_pos = [pos[0], pos[1]]
+                    piece.pos = new_pos
+                    score = self.minimax(new_board, depth - 1, alpha, beta, not maximizingPlayer)
+                    piece.pos = old_pos
+                    best_score = min(score, best_score)
+                    beta = min(beta, best_score)
+                    if beta <= alpha:
+                        break
+                return best_score
+
+    def update_board(self, board, current_piece, new_pos):
+        board[current_piece.pos[1]][current_piece.pos[0]] = ""
+        board[new_pos[1]][new_pos[0]] = current_piece.symbol
+        # self.display_board(board)
 
     def display_board(self, board):
         print("-------------------")
@@ -871,13 +1045,6 @@ class Game:
             king = self.get_king(0)
             pg.draw.rect(self.display, self.checkCol, (
                 TILE * king.pos[0] + TILE * 0.075, TILE * king.pos[1] + TILE * 0.075, TILE * 0.85, TILE * 0.85))
-
-        for t in self.test:
-            pg.draw.rect(self.display, self.checkCol, (
-                TILE * t[0] + TILE * 0.075, TILE * t[1] + TILE * 0.075, TILE * 0.85, TILE * 0.85))
-        for t in self.test1:
-            pg.draw.rect(self.display, NAVY, (
-                TILE * t[0] + TILE * 0.075, TILE * t[1] + TILE * 0.075, TILE * 0.85, TILE * 0.85))
 
         if self.current_piece != None and (self.moves or self.pos_kills):
             pg.draw.rect(self.display, YELLOW, (

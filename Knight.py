@@ -19,6 +19,7 @@ class Knight(pg.sprite.Sprite):
         self.rect.center = (self.x, self.y)
         self.pos = pos
         self.color = color
+        self.score = 3
         # self.rect.center = (x,y)
 
     def update(self):
@@ -45,114 +46,114 @@ class Knight(pg.sprite.Sprite):
 
         if (self.pos[1] - 1 >= 0) and (self.pos[0] + 2 <= 7):
             if self.game.board[self.pos[1] - 1][self.pos[0] + 2] == "":
-                if not self.kill_check([self.pos[0] + 2, self.pos[1] - 1], checkMoves, numChecks):
+                if not self.move_check([self.pos[0] + 2, self.pos[1] - 1], checkMoves, numChecks):
                     moves.append([self.pos[0] + 2, self.pos[1] - 1])
             else:
                 if self.color == 0:
                     if "b" in self.game.board[self.pos[1] - 1][self.pos[0] + 2]:
-                        if not self.kill_check([self.pos[0] + 2, self.pos[1] - 1], checkMoves, numChecks):
+                        if not self.move_check([self.pos[0] + 2, self.pos[1] - 1], checkMoves, numChecks):
                             kills.append([self.pos[0] + 2, self.pos[1] - 1])
                 if self.color == 1:
                     if "b" not in self.game.board[self.pos[1] - 1][self.pos[0] + 2]:
-                        if not self.kill_check([self.pos[0] + 2, self.pos[1] - 1], checkMoves, numChecks):
+                        if not self.move_check([self.pos[0] + 2, self.pos[1] - 1], checkMoves, numChecks):
                             kills.append([self.pos[0] + 2, self.pos[1] - 1])
 
         if (self.pos[1] - 2 >= 0) and (self.pos[0] + 1 <= 7):
             if self.game.board[self.pos[1] - 2][self.pos[0] + 1] == "":
-                if not self.kill_check([self.pos[0] + 1, self.pos[1] - 2], checkMoves, numChecks):
+                if not self.move_check([self.pos[0] + 1, self.pos[1] - 2], checkMoves, numChecks):
                     moves.append([self.pos[0] + 1, self.pos[1] - 2])
             else:
                 if self.color == 0:
                     if "b" in self.game.board[self.pos[1] - 2][self.pos[0] + 1]:
-                        if not self.kill_check([self.pos[0] + 1, self.pos[1] - 2], checkMoves, numChecks):
+                        if not self.move_check([self.pos[0] + 1, self.pos[1] - 2], checkMoves, numChecks):
                             kills.append([self.pos[0] + 1, self.pos[1] - 2])
                 if self.color == 1:
                     if "b" not in self.game.board[self.pos[1] - 2][self.pos[0] + 1]:
-                        if not self.kill_check([self.pos[0] + 1, self.pos[1] - 2], checkMoves, numChecks):
+                        if not self.move_check([self.pos[0] + 1, self.pos[1] - 2], checkMoves, numChecks):
                             kills.append([self.pos[0] + 1, self.pos[1] - 2])
 
         if (self.pos[1] - 2 >= 0) and (self.pos[0] - 1 >= 0):
             if self.game.board[self.pos[1] - 2][self.pos[0] - 1] == "":
-                if not self.kill_check([self.pos[0] - 1, self.pos[1] - 2], checkMoves, numChecks):
+                if not self.move_check([self.pos[0] - 1, self.pos[1] - 2], checkMoves, numChecks):
                     moves.append([self.pos[0] - 1, self.pos[1] - 2])
             else:
                 if self.color == 0:
                     if "b" in self.game.board[self.pos[1] - 2][self.pos[0] - 1]:
-                        if not self.kill_check([self.pos[0] - 1, self.pos[1] - 2], checkMoves, numChecks):
+                        if not self.move_check([self.pos[0] - 1, self.pos[1] - 2], checkMoves, numChecks):
                             kills.append([self.pos[0] - 1, self.pos[1] - 2])
                 if self.color == 1:
                     if "b" not in self.game.board[self.pos[1] - 2][self.pos[0] - 1]:
-                        if not self.kill_check([self.pos[0] - 1, self.pos[1] - 2], checkMoves, numChecks):
+                        if not self.move_check([self.pos[0] - 1, self.pos[1] - 2], checkMoves, numChecks):
                             kills.append([self.pos[0] - 1, self.pos[1] - 2])
 
         if (self.pos[1] + 2 <= 7) and (self.pos[0] - 1 >= 0):
             if self.game.board[self.pos[1] + 2][self.pos[0] - 1] == "":
-                if not self.kill_check([self.pos[0] - 1, self.pos[1] + 2], checkMoves, numChecks):
+                if not self.move_check([self.pos[0] - 1, self.pos[1] + 2], checkMoves, numChecks):
                     moves.append([self.pos[0] - 1, self.pos[1] + 2])
             else:
                 if self.color == 0:
                     if "b" in self.game.board[self.pos[1] + 2][self.pos[0] - 1]:
-                        if not self.kill_check([self.pos[0] - 1, self.pos[1] + 2], checkMoves, numChecks):
+                        if not self.move_check([self.pos[0] - 1, self.pos[1] + 2], checkMoves, numChecks):
                             kills.append([self.pos[0] - 1, self.pos[1] + 2])
                 if self.color == 1:
                     if "b" not in self.game.board[self.pos[1] + 2][self.pos[0] - 1]:
-                        if not self.kill_check([self.pos[0] - 1, self.pos[1] + 2], checkMoves, numChecks):
+                        if not self.move_check([self.pos[0] - 1, self.pos[1] + 2], checkMoves, numChecks):
                             kills.append([self.pos[0] - 1, self.pos[1] + 2])
 
         if (self.pos[1] + 1 <= 7) and (self.pos[0] - 2 >= 0):
             if self.game.board[self.pos[1] + 1][self.pos[0] - 2] == "":
-                if not self.kill_check([self.pos[0] - 2, self.pos[1] + 1], checkMoves, numChecks):
+                if not self.move_check([self.pos[0] - 2, self.pos[1] + 1], checkMoves, numChecks):
                     moves.append([self.pos[0] - 2, self.pos[1] + 1])
             else:
                 if self.color == 0:
                     if "b" in self.game.board[self.pos[1] + 1][self.pos[0] - 2]:
-                        if not self.kill_check([self.pos[0] - 2, self.pos[1] + 1], checkMoves, numChecks):
+                        if not self.move_check([self.pos[0] - 2, self.pos[1] + 1], checkMoves, numChecks):
                             kills.append([self.pos[0] - 2, self.pos[1] + 1])
                 if self.color == 1:
                     if "b" not in self.game.board[self.pos[1] + 1][self.pos[0] - 2]:
-                        if not self.kill_check([self.pos[0] - 2, self.pos[1] + 1], checkMoves, numChecks):
+                        if not self.move_check([self.pos[0] - 2, self.pos[1] + 1], checkMoves, numChecks):
                             kills.append([self.pos[0] - 2, self.pos[1] + 1])
 
         if (self.pos[1] - 1 >= 0) and (self.pos[0] - 2 >= 0):
             if self.game.board[self.pos[1] - 1][self.pos[0] - 2] == "":
-                if not self.kill_check([self.pos[0] - 2, self.pos[1] - 1], checkMoves, numChecks):
+                if not self.move_check([self.pos[0] - 2, self.pos[1] - 1], checkMoves, numChecks):
                     moves.append([self.pos[0] - 2, self.pos[1] - 1])
             else:
                 if self.color == 0:
                     if "b" in self.game.board[self.pos[1] - 1][self.pos[0] - 2]:
-                        if not self.kill_check([self.pos[0] - 2, self.pos[1] - 1], checkMoves, numChecks):
+                        if not self.move_check([self.pos[0] - 2, self.pos[1] - 1], checkMoves, numChecks):
                             kills.append([self.pos[0] - 2, self.pos[1] - 1])
                 if self.color == 1:
                     if "b" not in self.game.board[self.pos[1] - 1][self.pos[0] - 2]:
-                        if not self.kill_check([self.pos[0] - 2, self.pos[1] - 1], checkMoves, numChecks):
+                        if not self.move_check([self.pos[0] - 2, self.pos[1] - 1], checkMoves, numChecks):
                             kills.append([self.pos[0] - 2, self.pos[1] - 1])
 
         if (self.pos[1] + 1 <= 7) and (self.pos[0] + 2 <= 7):
             if self.game.board[self.pos[1] + 1][self.pos[0] + 2] == "":
-                if not self.kill_check([self.pos[0] + 2, self.pos[1] + 1], checkMoves, numChecks):
+                if not self.move_check([self.pos[0] + 2, self.pos[1] + 1], checkMoves, numChecks):
                     moves.append([self.pos[0] + 2, self.pos[1] + 1])
             else:
                 if self.color == 0:
                     if "b" in self.game.board[self.pos[1] + 1][self.pos[0] + 2]:
-                        if not self.kill_check([self.pos[0] + 2, self.pos[1] + 1], checkMoves, numChecks):
+                        if not self.move_check([self.pos[0] + 2, self.pos[1] + 1], checkMoves, numChecks):
                             kills.append([self.pos[0] + 2, self.pos[1] + 1])
                 if self.color == 1:
                     if "b" not in self.game.board[self.pos[1] + 1][self.pos[0] + 2]:
-                        if not self.kill_check([self.pos[0] + 2, self.pos[1] + 1], checkMoves, numChecks):
+                        if not self.move_check([self.pos[0] + 2, self.pos[1] + 1], checkMoves, numChecks):
                             kills.append([self.pos[0] + 2, self.pos[1] + 1])
 
         if (self.pos[1] + 2 <= 7) and (self.pos[0] + 1 <= 7):
             if self.game.board[self.pos[1] + 2][self.pos[0] + 1] == "":
-                if not self.kill_check([self.pos[0] + 1, self.pos[1] + 2], checkMoves, numChecks):
+                if not self.move_check([self.pos[0] + 1, self.pos[1] + 2], checkMoves, numChecks):
                     moves.append([self.pos[0] + 1, self.pos[1] + 2])
             else:
                 if self.color == 0:
                     if "b" in self.game.board[self.pos[1] + 2][self.pos[0] + 1]:
-                        if not self.kill_check([self.pos[0] + 1, self.pos[1] + 2], checkMoves, numChecks):
+                        if not self.move_check([self.pos[0] + 1, self.pos[1] + 2], checkMoves, numChecks):
                             kills.append([self.pos[0] + 1, self.pos[1] + 2])
                 if self.color == 1:
                     if "b" not in self.game.board[self.pos[1] + 2][self.pos[0] + 1]:
-                        if not self.kill_check([self.pos[0] + 1, self.pos[1] + 2], checkMoves, numChecks):
+                        if not self.move_check([self.pos[0] + 1, self.pos[1] + 2], checkMoves, numChecks):
                             kills.append([self.pos[0] + 1, self.pos[1] + 2])
 
         if king_check and numChecks == 1:
@@ -164,15 +165,15 @@ class Knight(pg.sprite.Sprite):
 
         return {"moves": moves, "kills": kills}
 
-    def kill_check(self, move, check_spaces, num_checks):
+    def move_check(self, move, check_spaces, num_checks):
         b = self.game.board
         new_board = [sublst[:] for sublst in b]
         new_board[self.pos[1]][self.pos[0]] = ""
         new_board[move[1]][move[0]] = self.symbol
-        print("NEW BORAD")
-        self.game.display_board(new_board)
-        a = self.game.turn
-        inverse = self.game.opponent(a)
+        # print("NEW BORAD")
+        # self.game.display_board(new_board)
+        t = self.game.turn
+        inverse = self.game.opponent(t)
 
         sprites = self.game.white_sprites
         if inverse == 1:
@@ -183,7 +184,7 @@ class Knight(pg.sprite.Sprite):
             pos = sprite.all_position(new_board)
             moves += pos
 
-        k = self.game.get_king(a)
+        k = self.game.get_king(t)
         return self.game.ischeck(k.pos, moves)
 
     def all_position(self, board, updated=[]):

@@ -19,6 +19,7 @@ class Rook(pg.sprite.Sprite):
         self.rect.center = (self.x, self.y)
         self.pos = pos
         self.color = color
+        self.score = 5
         # self.rect.center = (x,y)
 
     def update(self):
@@ -138,8 +139,8 @@ class Rook(pg.sprite.Sprite):
         new_board = [sublst[:] for sublst in b]
         new_board[self.pos[1]][self.pos[0]] = ""
         new_board[move[1]][move[0]] = self.symbol
-        print("NEW BORAD")
-        self.game.display_board(new_board)
+        # print("NEW BORAD")
+        # self.game.display_board(new_board)
         a = self.game.turn
         inverse = self.game.opponent(a)
 
@@ -157,26 +158,30 @@ class Rook(pg.sprite.Sprite):
 
     def kill_check(self, kills, check_spaces, num_checks):
         b = self.game.board
+        # print("BOARD: ")
+        # self.game.display_board(b)
         aproved_kills = []
         for kill in kills:
             new_board = [sublst[:] for sublst in b]
+            # self.game.display_board(new_board)
             new_board[self.pos[1]][self.pos[0]] = ""
             new_board[kill[1]][kill[0]] = self.symbol
-            self.game.display_board(self.game.board)
-            self.game.display_board(new_board)
+            # self.game.display_board(self.game.board)
+            # self.game.display_board(new_board)
             t = self.game.turn
             inverse = self.game.opponent(t)
 
             moves = []
             symbols = self.game.piece_on_board(new_board, inverse)
+            # print(symbols)
             sprites = []
             for i in symbols:
-                b = self.game.get_sprite(i, inverse)
-                sprites.append(b)
-            print(sprites)
+                sym_sprite = self.game.get_sprite(i, inverse)
+                sprites.append(sym_sprite)
+            # print(sprites)
 
             for sprite in sprites:
-                print("Sprite: ", sprite)
+                # print("Sprite: ", sprite)
                 pos = sprite.all_position(new_board)
                 moves += pos
             k = self.game.get_king(t)

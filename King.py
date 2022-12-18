@@ -134,7 +134,7 @@ class King(pg.sprite.Sprite):
         moves = [i for i in moves if i not in impossible]
         # print(self.game.black_moves, self.game.white_moves)
         kills = self.kill_check(kills, checkMoves, numChecks)
-        print("Kill: ", kills)
+        # print("Kill: ", kills)
         return {"moves": moves, "kills": kills}
 
     def kill_check(self, kills, check_spaces, num_checks):
@@ -144,8 +144,8 @@ class King(pg.sprite.Sprite):
             new_board = [sublst[:] for sublst in b]
             new_board[self.pos[1]][self.pos[0]] = ""
             new_board[kill[1]][kill[0]] = self.symbol
-            self.game.display_board(self.game.board)
-            self.game.display_board(new_board)
+            # self.game.display_board(self.game.board)
+            # self.game.display_board(new_board)
             a = self.game.turn
             inverse = self.game.opponent(a)
 
@@ -158,7 +158,7 @@ class King(pg.sprite.Sprite):
                 moves += pos
 
             # self.game.test = moves
-            print(self.game.ischeck(kill, moves))
+            # print(self.game.ischeck(kill, moves))
             if not self.game.ischeck(kill, moves):
                 aproved_kills.append(kill)
             # print(aproved_kills)

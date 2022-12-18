@@ -10,3 +10,5 @@ __TODO:__
 - [ ] Add Castlo (additional feat)
 - [X] Make it so that when pawn reaches end of the board pawn can change into any other piece (Rook, Queen, Bishop, Knight)
 - [X] Make it so that pieces wont move from there spot if the destation position leads to thier king getting checked
+- Problem might be that other times when `direction()` is called board is defined check it out
+- [ ] Fix this error `AttributeError: 'NoneType' object has no attribute 'all_position'`

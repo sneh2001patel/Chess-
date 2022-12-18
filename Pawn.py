@@ -120,8 +120,8 @@ class Pawn(pg.sprite.Sprite):
         new_board = [sublst[:] for sublst in b]
         new_board[self.pos[1]][self.pos[0]] = ""
         new_board[move[1]][move[0]] = self.symbol
-        print("NEW BORAD")
-        self.game.display_board(new_board)
+        # print("NEW BORAD")
+        # self.game.display_board(new_board)
         a = self.game.turn
         inverse = self.game.opponent(a)
 
