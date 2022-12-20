@@ -1,14 +1,13 @@
 # Chess
 <hr/>
+Made by: Sneh Patel (6698484) sp18oo@brocku.ca
+and Jenny Ma (6897185) jm19nu@brocku.ca
 
-__TODO:__
+This project uses Python library `pygame` to create a GUI if you do not have pygame installed already please run the following command: 
+`pip install -r requirements.txt`.
 
-- [X] Other pieces cannot move if the king is checked
-- [X] Check where the check is coming from and check if any pieces can block it, if it can block show it has a valid move it can take
-- [X] A king cannot kill a piece if the next move will result in a check (Only need to worry about this case with the king's kills)
-- [X] It is a checkmate if the king is in check and has no valid moves
-- [ ] Add Castlo (additional feat)
-- [X] Make it so that when pawn reaches end of the board pawn can change into any other piece (Rook, Queen, Bishop, Knight)
-- [X] Make it so that pieces wont move from there spot if the destation position leads to thier king getting checked
-- Problem might be that other times when `direction()` is called board is defined check it out
-- [ ] Fix this error `AttributeError: 'NoneType' object has no attribute 'all_position'`
+To run the code please run the `main.py` file using the command
+`python main.py` if you have two different versions of python install in your system please specify `python 3` when you run the program
+`python3 main.py`.
+
+If the game screen is too large for your local machine please change the `TILE` variable in settings to fit your screen.

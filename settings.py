@@ -1,12 +1,12 @@
 # Game Properties
 TILE = 100  # Change this to resize the window to fit the board 100 is recommended if need smaller try 80
 BOARDLEN = 8
-WIDTH = TILE * BOARDLEN
-HEIGHT = TILE * BOARDLEN
+WIDTH = TILE * BOARDLEN  # (800)
+HEIGHT = TILE * BOARDLEN  # (800)
 TITLE = "Chess"
-FPS = 10
+FPS = 60
 
-# Scores
+# SCORES FOR THE PIECES
 PIECES_SCORE = {
     "P": 1,
     "H": 3,
@@ -16,6 +16,7 @@ PIECES_SCORE = {
     "K": 0
 }
 
+# CHECKMATE HAS TO HAVE A HIGHER SCORE THAN ANYTHING PIECES CAN HAVE
 CHECKMATE_SCORE = {
     "WIN": 1000,
     "LOSE": -1000,
@@ -33,12 +34,11 @@ CYAN = (0, 255, 255)
 MAGENTA = (255, 0, 255)
 NAVY = (28, 42, 80)
 
-CHECK_SCORE = 100
-
+# alpha and beta init values
 ALPHA = float('-inf')
 BETA = float('inf')
 
-# Piece Path
+# Pieces Path
 BKING = "pieces/black/BKing.png"
 WKING = "pieces/white/WKing.png"
 
